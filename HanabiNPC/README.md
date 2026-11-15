@@ -31,11 +31,11 @@ The repository contains `Managed.zip` at its root. Extract it into `references/M
 dotnet build HanabiNPC/HanabiNPC.csproj -c Release -p:ManagedDir="C:\Path\To\references\Managed"
 ```
 
-The GitHub Actions workflow `.github/workflows/build-hanabinpc.yml` builds the DLL and publishes an installable ZIP artifact.
+The GitHub Actions workflow `.github/workflows/build-hanabinpc.yml` builds the DLL, converts all images to standard 8-bit RGBA PNG, and publishes an installable ZIP artifact with the `HanabiNPC/` folder at its root.
 
 ## Install
 
-Extract the built ZIP into the game's `Mods/` directory so the result is `Mods/HanabiNPC/manifest.xml`, `HanabiNPC.dll`, `Textures/` and `Localization/`. Enable Hanabi in the Mods menu and restart the game.
+Extract the ZIP directly into the game's `Mods/` directory. It will create `Mods/HanabiNPC/manifest.xml`, `HanabiNPC.dll`, `Textures/` and `Localization/`. Enable Hanabi in the Mods menu and restart the game.
 
 ## Compatibility
 
