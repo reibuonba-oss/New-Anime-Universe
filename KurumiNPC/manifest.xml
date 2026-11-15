@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manifest>
+  <ID>new_anime_universe.kurumi_arms_dealer</ID>
+  <Name>Kurumi — Arms &amp; Module Dealer</Name>
+  <Author>New Anime Universe</Author>
+  <ModVersion>0.1.0</ModVersion>
+  <Description>Kurumi is a rare arms dealer. She buys firearms, melee weapons and gun modifications, and sells advanced energy cells and useful modules. Includes a custom portrait and Vietnamese/English dialogue.</Description>
+  <GameVersions>
+    <Version>1.0.0</Version>
+  </GameVersions>
+  <Prerequisites />
+  <Assemblies>
+    <Assembly>KurumiNPC.dll</Assembly>
+  </Assemblies>
+  <Capabilities />
+</Manifest>
