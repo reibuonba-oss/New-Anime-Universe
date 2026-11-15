@@ -1,0 +1,51 @@
+name: Build Rem NPC
+
+on:
+  push:
+    branches:
+      - feature/rem-luxury-merchant
+    paths:
+      - 'RemNPC/**'
+      - 'Managed.zip'
+      - '.github/workflows/build-remnpc.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Extract game reference assemblies
+        shell: pwsh
+        run: Expand-Archive -Path "${{ github.workspace }}\Managed.zip" -DestinationPath "${{ github.workspace }}\references\Managed" -Force
+
+      - name: Build Rem NPC
+        run: dotnet build RemNPC/RemNPC.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\references\Managed"
+
+      - name: Assemble installable mod
+        shell: pwsh
+        run: |
+          $package = "${{ runner.temp }}\RemNPC"
+          New-Item -ItemType Directory -Force -Path $package | Out-Null
+          Copy-Item RemNPC\manifest.xml $package\manifest.xml
+          Copy-Item RemNPC\bin\Release\netstandard2.1\RemNPC.dll $package\RemNPC.dll
+          Copy-Item -Recurse RemNPC\Textures $package\Textures
+          Copy-Item -Recurse RemNPC\Localization $package\Localization
+          Compress-Archive -Path "$package\*" -DestinationPath "${{ runner.temp }}\RemNPC.zip" -Force
+
+      - name: Upload installable mod package
+        uses: actions/upload-artifact@v4
+        with:
+          name: RemNPC
+          path: ${{ runner.temp }}\RemNPC.zip
+          if-no-files-found: error

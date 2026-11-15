@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manifest>
+  <ID>new_anime_universe.rem_merchant</ID>
+  <Name>Rem — Luxury &amp; Food Merchant</Name>
+  <Author>New Anime Universe</Author>
+  <ModVersion>0.1.0</ModVersion>
+  <Description>Rem is a rare upper-level visitor. She sells luxury goods and buys food and water. She has her own dialogue and a 9% daily appearance chance.</Description>
+  <GameVersions>
+    <Version>1.0.0</Version>
+  </GameVersions>
+  <Prerequisites />
+  <Assemblies>
+    <Assembly>RemNPC.dll</Assembly>
+  </Assemblies>
+  <Capabilities />
+</Manifest>
