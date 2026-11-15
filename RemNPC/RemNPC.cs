@@ -5,7 +5,7 @@ namespace NewAnimeUniverse.RemNPC
 {
     /// <summary>
     /// Rem: an upper-level household merchant who sells luxury goods and buys food/water.
-    /// Appearance chance is rolled once per in-game day (9%).
+    /// Appearance chance is rolled once per in-game day (11%).
     /// </summary>
     public sealed class RemNPCMod : IMod
     {
@@ -184,12 +184,12 @@ namespace NewAnimeUniverse.RemNPC
             int lastRollDay = ModHelper.GetModDataInt(ModId, "last_roll_day", -1);
             int lastVisitDay = ModHelper.GetModDataInt(ModId, "last_visit_day", -1);
 
-            // One independent 9% roll per in-game day; Rem can visit at most once per day.
+            // One independent 11% roll per in-game day; Rem can visit at most once per day.
             if (lastRollDay == day || lastVisitDay == day)
                 return;
 
             ModHelper.SetModDataInt(ModId, "last_roll_day", day);
-            if (RNG.GetRandomInt(1, 100) > 9)
+            if (RNG.GetRandomInt(1, 100) > 11)
                 return;
 
             try
@@ -197,7 +197,7 @@ namespace NewAnimeUniverse.RemNPC
                 StoreClient rem = CreateRem(day);
                 manager.AddClient(rem);
                 ModHelper.SetModDataInt(ModId, "last_visit_day", day);
-                log.Log("Rem was queued for day " + day + " (9% daily roll succeeded).");
+                log.Log("Rem was queued for day " + day + " (11% daily roll succeeded).");
             }
             catch (Exception ex)
             {
