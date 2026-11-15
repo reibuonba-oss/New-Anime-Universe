@@ -4,7 +4,7 @@ A Probably Stolen mod that adds Rem as a rare upper-level merchant.
 
 ## Behaviour
 
-- **Appearance:** one independent **9% roll per in-game day**, evaluated at `OnGenerateCustomerVeryLate`. Rem can visit at most once per day.
+- **Appearance:** one independent **11% roll per in-game day**, evaluated at `OnGenerateCustomerVeryLate`. Rem can visit at most once per day.
 - **Sells:** four randomly selected vanilla items from the game's `LUXURY_ITEM` catalogue per visit.
 - **Buys:** vanilla items with the `FOOD` type plus the supported water item IDs listed in `RemNPC.cs`.
 - **Dialogue:** custom opening dialogue and a separate buy-food/water line, localized in English and Vietnamese.
