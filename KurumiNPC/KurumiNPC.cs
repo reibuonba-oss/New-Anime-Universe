@@ -203,12 +203,12 @@ namespace NewAnimeUniverse.KurumiNPC
             int lastRollDay = ModHelper.GetModDataInt(ModId, "last_roll_day", -1);
             int lastVisitDay = ModHelper.GetModDataInt(ModId, "last_visit_day", -1);
 
-            // One independent 9% roll per in-game day; Kurumi can visit at most once per day.
+            // One independent 10% roll per in-game day; Kurumi can visit at most once per day.
             if (lastRollDay == day || lastVisitDay == day)
                 return;
 
             ModHelper.SetModDataInt(ModId, "last_roll_day", day);
-            if (RNG.GetRandomInt(1, 100) > 9)
+            if (RNG.GetRandomInt(1, 100) > 10)
                 return;
 
             try
@@ -216,7 +216,7 @@ namespace NewAnimeUniverse.KurumiNPC
                 StoreClient kurumi = CreateKurumi(day);
                 manager.AddClient(kurumi);
                 ModHelper.SetModDataInt(ModId, "last_visit_day", day);
-                log.Log("Kurumi was queued for day " + day + " (9% daily roll succeeded).");
+                log.Log("Kurumi was queued for day " + day + " (10% daily roll succeeded).");
             }
             catch (Exception ex)
             {
