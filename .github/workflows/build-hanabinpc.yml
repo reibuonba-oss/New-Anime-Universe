@@ -32,16 +32,23 @@ jobs:
       - name: Build Hanabi NPC
         run: dotnet build HanabiNPC/HanabiNPC.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\references\Managed"
 
+      - name: Convert images to widely compatible RGBA PNG
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check Pillow
+          python -c "from pathlib import Path; from PIL import Image; files=[Path('HanabiNPC/Textures/hanabi.png'),Path('HanabiNPC/Textures/Items/hanabi_gun.png'),Path('HanabiNPC/Textures/Items/hanabi_mask.png')]; [(Image.open(p).convert('RGBA').save(p,format='PNG',optimize=True)) for p in files]"
+
       - name: Assemble installable mod
         shell: pwsh
         run: |
-          $package = "${{ runner.temp }}\HanabiNPC"
+          $root = "${{ runner.temp }}\HanabiPackage"
+          $package = Join-Path $root "HanabiNPC"
           New-Item -ItemType Directory -Force -Path $package | Out-Null
           Copy-Item HanabiNPC\manifest.xml $package\manifest.xml
           Copy-Item HanabiNPC\bin\Release\netstandard2.1\HanabiNPC.dll $package\HanabiNPC.dll
           Copy-Item -Recurse HanabiNPC\Textures $package\Textures
           Copy-Item -Recurse HanabiNPC\Localization $package\Localization
-          Compress-Archive -Path "$package\*" -DestinationPath "${{ runner.temp }}\HanabiNPC.zip" -Force
+          Compress-Archive -Path "$root\*" -DestinationPath "${{ runner.temp }}\HanabiNPC.zip" -Force
 
       - name: Upload installable mod package
         uses: actions/upload-artifact@v4
