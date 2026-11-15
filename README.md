@@ -2,9 +2,10 @@
 
 Mod thêm NPC cho Probably Stolen.
 
-## NPC trong dự án
+## NPC trong nhánh này
 
-- **Rem** — thương nhân thượng lưu xuất hiện ngẫu nhiên với tỷ lệ 9% mỗi ngày trong game. Rem xuất hiện với tỷ lệ 11% mỗi ngày, bán hàng xa xỉ và thu mua thực phẩm, nước; có lời thoại riêng. Mã nguồn: [RemNPC/](RemNPC/README.md).
-- **Kurumi** — thương nhân vũ khí xuất hiện ngẫu nhiên với tỷ lệ 9% mỗi ngày trong game. Kurumi xuất hiện với tỷ lệ 10% mỗi ngày, thu mua súng, vũ khí cận chiến và phụ kiện súng; bán pin Energy Cell Mk. II, pin tự sạc và module. Mã nguồn: [KurumiNPC/](KurumiNPC/README.md).
+- **Rem** — thương nhân thượng lưu: bán hàng xa xỉ và thu mua thực phẩm/nước. Tỷ lệ xuất hiện được quản lý riêng trong mod Rem.
+- **Kurumi** — thương nhân vũ khí: thu mua súng/vũ khí, bán pin cao cấp và module. Tỷ lệ xuất hiện 10% mỗi ngày trong game.
+- **Kaito** — người sưu tầm: xuất hiện với tỷ lệ 8% mỗi ngày, thu mua vũ khí chọn lọc, module, pin năng lượng và hàng xa xỉ; bán bộ lọc nước, pin và module vanilla.
 
-Mỗi NPC là một mod độc lập, có thể bật/tắt riêng. Các gói cài đặt được tạo từ GitHub Actions sau khi build thành công.
+Mỗi NPC là một mod độc lập, có thể bật/tắt riêng. Kaito ưu tiên vật phẩm vanilla, không thêm item tùy chỉnh, không Harmony patch và không yêu cầu capability bổ sung.
