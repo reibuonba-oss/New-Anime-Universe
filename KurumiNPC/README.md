@@ -4,7 +4,7 @@ A standalone Probably Stolen NPC mod. Kurumi is an upper-level arms dealer who b
 
 ## Behaviour
 
-- **Appearance:** one independent **9% roll per in-game day** at `OnGenerateCustomerVeryLate`; at most one Kurumi visit per day.
+- **Appearance:** one independent **10% roll per in-game day** at `OnGenerateCustomerVeryLate`; at most one Kurumi visit per day.
 - **Buys:** firearms, melee weapons and gun modifications. The client has the native `SELLNBUY` intent and uses the `WEAPON` and `GUN_MOD` buying tags, with an explicit vanilla weapon-ID list as a fallback.
 - **Sells:** an Energy Cell (Mk. II), a Self Charging Energy Cell, and four randomly selected specialist modules on each visit.
 - **Dialogue:** custom Kurumi dialogue localized in Vietnamese and English.
