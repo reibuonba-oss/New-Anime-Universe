@@ -236,11 +236,6 @@ namespace NewAnimeUniverse.KurumiNPC
             kurumi.clientIntent = StoreClient.ClientIntent.SELLNBUY;
             kurumi.SetBudget(6000 + Math.Max(0, day) * 50);
 
-            if (kurumi.clientBuyingIdList == null)
-                kurumi.clientBuyingIdList = new Il2CppSystem.Collections.Generic.List<string>();
-            if (kurumi.clientBuyingTagList == null)
-                kurumi.clientBuyingTagList = new Il2CppSystem.Collections.Generic.List<string>();
-
             kurumi.clientBuyingIdList.Clear();
             for (int i = 0; i < WeaponItemIds.Length; i++)
                 kurumi.clientBuyingIdList.Add(WeaponItemIds[i]);
