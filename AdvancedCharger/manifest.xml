@@ -3,8 +3,8 @@
   <ID>new_anime_universe.advanced_charger</ID>
   <Name>Anime Universe — Advanced Battery Charger</Name>
   <Author>New Anime Universe</Author>
-  <ModVersion>0.1.0</ModVersion>
-  <Description>An advanced battery charging station that charges power cells at twice the vanilla Recharger rate: 6 kJ per night, or 12 kJ with Commercial Power. Uses the game's native battery and power restrictions.</Description>
+  <ModVersion>0.1.1</ModVersion>
+  <Description>An advanced battery charging station that charges power cells at twice the vanilla Recharger rate: 6 kJ per night, or 12 kJ with Commercial Power. Uses the game's native battery and power restrictions. Not granted for free; purchase from Kaito.</Description>
   <GameVersions>
     <Version>1.0.0</Version>
   </GameVersions>
