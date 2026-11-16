@@ -19,7 +19,7 @@ The input accepts only the vanilla item id `junk`; it will not consume other ite
 - Uses the game's Machinery window, battery slot, universal module bay, and native overnight machine cycle callback.
 - Uses the vanilla furnace sprite and an original item ID.
 - Does not patch game methods with Harmony and declares no extra capabilities.
-- Grants one starter machine to the player's inventory on the first loaded run where the mod is enabled. If the inventory is full, it retries on the next load.
+- Does **not** grant a free machine on game start. Obtain the Recycler from Kaito when his shop visit is available; enable Kaito NPC as well.
 - An F9 debug spawn button is included for testing builds.
 
 ## Build
@@ -32,6 +32,6 @@ dotnet build RecyclerMachine/RecyclerMachine.csproj -c Release -p:ManagedDir="C:
 
 ## Install
 
-Extract the generated ZIP into the game's `Mods/` directory. Enable **Anime Universe — Recycler Machine** in the Mods menu and restart the game.
+Extract the generated ZIP into the game's `Mods/` directory. Enable **Anime Universe — Recycler Machine** and **Kaito — The Collector** in the Mods menu and restart the game. Purchase the Recycler from Kaito; no free starter copy is given.
 
 The DLL build and package checks do not replace an in-game save test. Confirm the nightly cycle, energy draw, output capacity, and module threshold on the exact game build before treating this as production-ready.
