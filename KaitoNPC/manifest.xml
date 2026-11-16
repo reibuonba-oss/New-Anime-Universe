@@ -3,8 +3,8 @@
   <ID>new_anime_universe.kaito_collector</ID>
   <Name>Kaito — The Collector</Name>
   <Author>New Anime Universe</Author>
-  <ModVersion>0.2.0</ModVersion>
-  <Description>A materials and power merchant who buys only raw materials and batteries, and sells only the Anime Universe Recycler and Advanced Battery Charger mods' machines.</Description>
+  <ModVersion>0.2.1</ModVersion>
+  <Description>A materials and power merchant who buys only raw materials and batteries, and sells the Anime Universe Recycler for 399 credits and Advanced Battery Charger for 799 credits.</Description>
   <GameVersions>
     <Version>1.0.0</Version>
   </GameVersions>
