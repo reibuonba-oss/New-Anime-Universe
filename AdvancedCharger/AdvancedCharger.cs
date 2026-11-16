@@ -60,7 +60,7 @@ namespace NewAnimeUniverse.AdvancedCharger
         {
             // Reuse the vanilla Recharger's own panel and battery-grid layout.
             var inventoryWindow = MachineRecharger.CreateMachineInventoryWindow(true, true);
-            GameGridInventory batteries = inventoryWindow.Item2;
+            GameInventory batteries = inventoryWindow.Item2;
 
             batteries.mayInventoryAddItemFunc =
                 (GameItem item, GameInventory _) =>
@@ -101,7 +101,7 @@ namespace NewAnimeUniverse.AdvancedCharger
 
         private static void ChargeInsertedBatteries(
             GameItem machine,
-            GameGridInventory batteryInventory)
+            GameInventory batteryInventory)
         {
             if (machine == null || batteryInventory == null) return;
 
