@@ -36,7 +36,6 @@ namespace NewAnimeUniverse.RecyclerMachine
         public void OnEnable()
         {
             ModHook.OnModItemDirectoryInit += RegisterItems;
-            ModHook.OnGameLoadedLate += EnsureStarterMachine;
             ModHook.OnCreateTooltipLate += AddTooltip;
             ModHelper.AddDebugFunction(
                 ModId,
@@ -48,7 +47,6 @@ namespace NewAnimeUniverse.RecyclerMachine
         public void OnDisable()
         {
             ModHook.OnModItemDirectoryInit -= RegisterItems;
-            ModHook.OnGameLoadedLate -= EnsureStarterMachine;
             ModHook.OnCreateTooltipLate -= AddTooltip;
             ModHelper.RemoveDebugFunctions(ModId);
             if (ReferenceEquals(sharedLog, log))
@@ -246,45 +244,6 @@ namespace NewAnimeUniverse.RecyclerMachine
                     item.Destroy();
                 }
                 catch { }
-            }
-        }
-
-        private void EnsureStarterMachine()
-        {
-            try
-            {
-                if (PlayerStore.Instance == null || EmporiumEntry.Instance == null) return;
-                if (ModHelper.GetModDataBool(ModId, "starter_machine_given")) return;
-
-                bool alreadyOwned = EmporiumEntry.Instance.GetAllItems().Any(
-                    x => x != null && x.identifier == ItemId && GeneralHelper.IsItemOwned(x));
-                if (alreadyOwned)
-                {
-                    ModHelper.SetModDataBool(ModId, "starter_machine_given", true);
-                    return;
-                }
-
-                GameItem machine = DirectoryMaster.Item(ItemId, true);
-                if (machine == null)
-                {
-                    log.Warning("Could not create the starter Recycler.");
-                    return;
-                }
-
-                ModHelper.MoveItemToInventory(machine);
-                if (machine.parentInventory != null)
-                {
-                    ModHelper.SetModDataBool(ModId, "starter_machine_given", true);
-                    log.Log("Granted one starter Recycler to the player's inventory.");
-                }
-                else
-                {
-                    log.Warning("Player inventory is full; the starter Recycler was not granted.");
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error("Could not grant the starter Recycler: " + ex);
             }
         }
 
