@@ -17,10 +17,10 @@ It uses the game's native `PowerHelper.ChargeBattery` method, so the normal maxi
 
 - Reuses the vanilla Recharger battery panel and inventory grid.
 - Accepts items carrying the vanilla `power_source_item` tag.
-- Grants one starter station on first load. If the player's inventory is full, it retries on the next load.
+- Does **not** grant a free station on game start. Purchase it from Kaito when his shop visit is available; enable Kaito NPC as well.
 - Includes an F9 debug spawn entry for testing.
 - Build against the game's `Managed.zip` reference assemblies.
 
-Extract the generated `AdvancedCharger.zip` into the game's `Mods` directory, enable **Anime Universe — Advanced Battery Charger**, and restart the game.
+Extract the generated `AdvancedCharger.zip` into the game's `Mods` directory, enable **Anime Universe — Advanced Battery Charger** and **Kaito — The Collector**, and restart the game. Purchase the station from Kaito; no free starter copy is given.
 
 The CI build/package check verifies compilation and ZIP contents. A real in-game save test is still required to confirm the charging cycle on the exact installed game version.
