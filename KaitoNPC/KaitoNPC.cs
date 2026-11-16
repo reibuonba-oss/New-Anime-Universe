@@ -40,6 +40,11 @@ namespace NewAnimeUniverse.KaitoNPC
             "nau_advanced_charger"
         };
 
+        // Fixed Kaito counter prices. These values are applied to the stock copies only;
+        // the standalone machine items keep their own default item values elsewhere.
+        private const long RecyclerSalePrice = 399L;
+        private const long AdvancedChargerSalePrice = 799L;
+
         private ModLog log;
         private Sprite kaitoPortrait;
         private Sprite previousPortrait;
@@ -265,7 +270,23 @@ namespace NewAnimeUniverse.KaitoNPC
                     return 0;
                 }
 
+                long salePrice;
+                if (itemId == "nau_recycler")
+                    salePrice = RecyclerSalePrice;
+                else if (itemId == "nau_advanced_charger")
+                    salePrice = AdvancedChargerSalePrice;
+                else
+                {
+                    item.Destroy();
+                    log.Warning("Refused to place an item without a configured Kaito sale price: " + itemId);
+                    return 0;
+                }
+
+                // AddDirectSellingItemToTable takes the stock item, not a separate price argument.
+                // Set the value on this individual stock copy before placing it on the counter.
+                item.unitValue = salePrice;
                 store.AddDirectSellingItemToTable(item, false, false, false, 0);
+                log.Log("Placed " + itemId + " on Kaito's table for " + salePrice + " credits.");
                 return 1;
             }
             catch (Exception ex)
