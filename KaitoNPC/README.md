@@ -1,23 +1,23 @@
-# Kaito — The Collector
+# Kaito — Materials & Power Merchant
 
-A conservative, standalone Probably Stolen NPC mod built around vanilla game systems.
+A conservative, standalone Probably Stolen NPC mod.
 
-## Design
+## Trading rules
 
-- **Appearance:** one 8% roll per in-game day. Kaito can visit at most once per day.
-- **Buys:** a curated list of vanilla weapons, plus items tagged `MODULE`, `ENERGY_CELL`, and `LUXURY_ITEM`.
+- **Buys only:** basic materials, refined materials, hand materials and energy cells. The exact vanilla item IDs `junk` and `scrap_metal` are also on his purchase whitelist.
+- **Does not buy:** weapons, modules, luxury goods or other item categories.
+- **Sells only:** Anime Universe Recycler (`nau_recycler`) and Advanced Battery Charger (`nau_advanced_charger`).
+- Both machine sale items are optional runtime stock: the corresponding Recycler / Advanced Charger mod must be enabled and loaded. If one is unavailable, Kaito skips it instead of substituting unrelated vanilla stock.
+- **Appearance:** one 8% roll per in-game day; at most one visit per day.
 - **Budget:** 4,800 credits plus 25 credits per in-game day.
-- **Sells:** Advanced Water Filter, HydraTech Micro Water Purifier, Energy Cell Mk. II, Self Charging Energy Cell, and two different vanilla modules per visit.
-- **Dialogue:** original Kaito dialogue in Vietnamese and English.
-- **Portrait:** the supplied 242 × 300 transparent PNG.
+- **Dialogue:** Vietnamese and English.
 
-## Low-risk implementation choices
+## Implementation
 
-- No custom item definitions or item directory hooks.
-- No Harmony patches, reflection, filesystem access, or external capabilities.
-- Uses the native `IMod` lifecycle, the customer-generation hook, and vanilla item IDs.
-- Missing stock items are skipped with a warning rather than causing the customer generation to fail.
-- The daily roll state is stored through the mod's per-run ModData.
+- Uses the native customer-generation hook and buyer tag / ID whitelists.
+- No Harmony patches or new customer sprites/factions.
+- Kaito's table is restricted to the two machine IDs above; no filters, modules, weapons or other utility stock are added.
+- Missing machine stock is skipped with a warning rather than breaking customer generation.
 
 ## Build
 
@@ -29,8 +29,8 @@ dotnet build KaitoNPC/KaitoNPC.csproj -c Release -p:ManagedDir="C:\Path\To\refer
 
 The workflow `.github/workflows/build-kaitonpc.yml` creates an installable ZIP.
 
-## Install
+## Install and dependencies
 
-Extract the ZIP into the game's `Mods/` directory, enable Kaito in the Mods menu, and restart the game.
+Extract the ZIP into the game's `Mods/` directory, enable Kaito, Recycler Machine and Advanced Battery Charger (to receive both machine stock items), then restart the game.
 
-This is a compiled mod, but an in-game test is still needed to verify actual customer generation, trade acceptance and stock placement on the user's game build.
+The CI build/package check does not replace an in-game save test. Confirm that the purchase whitelist accepts only the intended categories and that the two machine items appear when their respective mods are enabled.
