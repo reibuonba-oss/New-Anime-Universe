@@ -70,7 +70,7 @@ namespace NewAnimeUniverse.RecyclerMachine
                 Modules = new GameGridInventory(
                     MachineHelper.DEFAULT_MODULE_BAY_CONFIG,
                     MachineHelper.DEFAULT_MODULE_BAY_WIDTH),
-                Input = new GameGridInventory(6, 4),
+                Input = new GameGridInventory(12, 4), // 3x2 Junk fits 4 across x 2 rows = 8 items.
                 Output = new GameGridInventory(6, 4)
             };
 

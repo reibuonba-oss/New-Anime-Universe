@@ -4,6 +4,7 @@ A standalone, vanilla-style Probably Stolen machine.
 
 ## Recipe
 
+- Input grid: **12×4**, enough room for eight standard 3×2 Junk items at once.
 - Base cycle: **4 Junk** (`junk`) → **1 Scrap Metal** (`scrap_metal`), overnight.
 - Base energy draw: **5 energy per cycle**.
 - At **50% or more Performance**: when at least 8 Junk are loaded, the machine processes **8 Junk → 2 Scrap Metal** in that same cycle.

@@ -3,8 +3,8 @@
   <ID>new_anime_universe.recycler_machine</ID>
   <Name>Anime Universe — Recycler Machine</Name>
   <Author>New Anime Universe</Author>
-  <ModVersion>0.1.0</ModVersion>
-  <Description>A vanilla-style recycling machine. Processes four Junk into one Scrap Metal overnight; at 50% performance it can process eight Junk into two Scrap Metal. Efficiency modules reduce power use; Quality modules have no effect.</Description>
+  <ModVersion>0.1.1</ModVersion>
+  <Description>A vanilla-style recycling machine with an input bay large enough for the double batch. Processes four Junk into one Scrap Metal overnight; at 50% performance it can process eight Junk into two Scrap Metal. Efficiency modules reduce power use; Quality modules have no effect.</Description>
   <GameVersions>
     <Version>1.0.0</Version>
   </GameVersions>
