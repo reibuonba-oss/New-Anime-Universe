@@ -1,0 +1,5 @@
+advanced_charger.name,Trạm Sạc Pin Nâng Cao
+advanced_charger.description,"Sạc pin nhanh gấp đôi trạm Recharger thông thường. Cần có điện lưới."
+advanced_charger.flavor,"Một trạm sạc công suất cao được gia cố để nạp pin nhanh hơn."
+advanced_charger.tooltip.rate,"Tốc độ sạc: gấp 2 lần trạm Recharger thường"
+advanced_charger.tooltip.power,"6 kJ mỗi đêm; 12 kJ khi mở khóa Điện Thương Mại."
