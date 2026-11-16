@@ -1,4 +1,4 @@
-kaito.greeting,"Hello. I'm Kaito. I collect useful technology and well-made rare goods."
-kaito.buy,"I'm buying selected weapons, modules, energy cells and luxury goods. I only carry what I can properly inspect."
-kaito.stock,"Today I brought advanced water filters, energy cells and a small selection of modules. Practical things, chosen carefully."
+kaito.greeting,"Hello. I'm Kaito. I deal in useful raw materials and power cells."
+kaito.buy,"I buy raw materials and batteries only. No weapons, modules or luxury goods."
+kaito.stock,"I sell two machines: the Recycler and the Advanced Battery Charger."
 kaito.farewell,"Good equipment lasts. Take care of it, and it will take care of you."
