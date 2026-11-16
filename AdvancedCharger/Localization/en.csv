@@ -1,0 +1,5 @@
+advanced_charger.name,Advanced Battery Charger
+advanced_charger.description,"Charges inserted power cells at twice the speed of a standard Recharger. Requires grid power."
+advanced_charger.flavor,"A reinforced high-output station built to refill power cells faster."
+advanced_charger.tooltip.rate,"Charging speed: 2× standard Recharger"
+advanced_charger.tooltip.power,"6 kJ per night; 12 kJ with Commercial Power unlocked."
