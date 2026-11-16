@@ -1,0 +1,12 @@
+recycler.name,Recycler
+recycler.description,"Turns four pieces of Junk into one Scrap Metal overnight. Uses energy."
+recycler.flavor,"A sturdy station machine that separates reusable metal from broken rubbish."
+recycler.modules,Modules
+recycler.input,Junk Input
+recycler.output,Scrap Metal Output
+recycler.tooltip.recipe,"Base: 4 Junk → 1 Scrap Metal overnight. At 50% Performance: 8 Junk → 2 Scrap Metal."
+recycler.tooltip.power,"Energy per cycle: {0}"
+recycler.tooltip.performance,"Performance: {0}% — double batch {1}"
+recycler.unlocked,unlocked
+recycler.locked,locked
+recycler.tooltip.modules,"Efficiency reduces power use. Quality has no effect."

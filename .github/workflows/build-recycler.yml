@@ -1,0 +1,63 @@
+name: Build Recycler Machine
+
+on:
+  push:
+    branches:
+      - feature/recycler-machine
+    paths:
+      - 'RecyclerMachine/**'
+      - 'Managed.zip'
+      - '.github/workflows/build-recycler.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Extract game reference assemblies
+        shell: pwsh
+        run: Expand-Archive -Path "${{ github.workspace }}\Managed.zip" -DestinationPath "${{ github.workspace }}\references\Managed" -Force
+
+      - name: Build Recycler Machine
+        run: dotnet build RecyclerMachine/RecyclerMachine.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\references\Managed"
+
+      - name: Assemble installable mod
+        shell: pwsh
+        run: |
+          $root = "${{ runner.temp }}\RecyclerPackage"
+          $package = Join-Path $root "RecyclerMachine"
+          New-Item -ItemType Directory -Force -Path (Join-Path $package "Localization") | Out-Null
+          Copy-Item RecyclerMachine\manifest.xml $package\manifest.xml
+          Copy-Item RecyclerMachine\bin\Release\netstandard2.1\RecyclerMachine.dll $package\RecyclerMachine.dll
+          Copy-Item RecyclerMachine\Localization\* (Join-Path $package "Localization")
+          Compress-Archive -Path "$root\*" -DestinationPath "${{ runner.temp }}\RecyclerMachine.zip" -Force
+
+      - name: Verify install package
+        shell: pwsh
+        run: |
+          $zip = "${{ runner.temp }}\RecyclerMachine.zip"
+          $archive = [System.IO.Compression.ZipFile]::OpenRead($zip)
+          $names = $archive.Entries | ForEach-Object FullName
+          $archive.Dispose()
+          if ($names -notcontains "RecyclerMachine/manifest.xml") { throw "Manifest missing from ZIP" }
+          if ($names -notcontains "RecyclerMachine/RecyclerMachine.dll") { throw "DLL missing from ZIP" }
+          if ($names -notcontains "RecyclerMachine/Localization/en.csv") { throw "English localization missing from ZIP" }
+          if ($names -notcontains "RecyclerMachine/Localization/vi.csv") { throw "Vietnamese localization missing from ZIP" }
+
+      - name: Upload installable mod package
+        uses: actions/upload-artifact@v4
+        with:
+          name: RecyclerMachine
+          path: ${{ runner.temp }}\RecyclerMachine.zip
+          if-no-files-found: error
