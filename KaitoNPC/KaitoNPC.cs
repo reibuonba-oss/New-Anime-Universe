@@ -5,8 +5,8 @@ using UnityEngine;
 namespace NewAnimeUniverse.KaitoNPC
 {
     /// <summary>
-    /// Kaito is a cautious collector who buys selected weapons, modules,
-    /// energy cells and luxury goods, and sells practical technology supplies.
+    /// Kaito buys raw materials and batteries, and sells only the Recycler
+    /// and Advanced Battery Charger from the Anime Universe machine mods.
     /// </summary>
     public sealed class KaitoNPCMod : IMod
     {
@@ -16,59 +16,28 @@ namespace NewAnimeUniverse.KaitoNPC
         private const string PortraitTextureKey = "kaito";
         private const int DailyAppearanceChance = 8;
 
-        // Curated vanilla weapon IDs. Avoids adding custom weapon code.
-        private static readonly string[] WeaponItemIds =
+        // Buyer whitelist: material classes, energy cells, plus the exact raw
+        // recycling inputs used by the Anime Universe Recycler.
+        private static readonly string[] BuyingTagIds =
         {
-            "printed_gun",
-            "handmade_pistol",
-            "heavy_handmade_pistol",
-            "glock_receiver",
-            "smg",
-            "shotgun",
-            "revolver",
-            "stun_gun",
-            "tazer",
-            "kitchen_knife",
-            "box_cutter",
-            "combat_knife",
-            "kitchen_cleaver",
-            "combat_machete",
-            "pipe_weapon",
-            "stun_baton",
-            "crowbar",
-            "hatchet",
-            "glass_shard_shiv"
+            "BASIC_MATERIAL",
+            "REFINED_MATERIAL",
+            "HAND_MATERIAL",
+            "ENERGY_CELL"
         };
 
-        // Vanilla module catalogue entries known to exist in the game's item catalogue.
-        private static readonly string[] ModuleItemIds =
+        private static readonly string[] BuyingItemIds =
         {
-            "system_module_performance",
-            "system_module_efficiancy",
-            "system_module_quality",
-            "system_module_overclock",
-            "system_module_eco",
-            "system_module_fineness",
-            "system_module_streamlining",
-            "farm_module_nutrifruit",
-            "farm_module_dream_cap",
-            "farm_module_kotton_loom",
-            "farm_module_hydroreed_filter",
-            "evaporator_module_solvent_recovery",
-            "printer_module_metal",
-            "alarm_module_transmitter",
-            "furnace_module_blast",
-            "furnace_module_junk",
-            "chem_module"
+            "junk",
+            "scrap_metal"
         };
 
-        // Fixed vanilla utility stock; no custom item definitions are registered.
-        private static readonly string[] FixedStockIds =
+        // Kaito sells only these two machines. They are supplied by the
+        // separate Anime Universe Recycler and Advanced Charger mods.
+        private static readonly string[] SaleItemIds =
         {
-            "water_filter_adv",
-            "portable_water_purifier",
-            "energy_credit_ext",
-            "energy_credit_breeder"
+            "nau_recycler",
+            "nau_advanced_charger"
         };
 
         private ModLog log;
@@ -243,21 +212,20 @@ namespace NewAnimeUniverse.KaitoNPC
             kaito.SetBudget(4800 + Math.Max(0, day) * 25);
 
             kaito.clientBuyingIdList.Clear();
-            for (int i = 0; i < WeaponItemIds.Length; i++)
-                kaito.clientBuyingIdList.Add(WeaponItemIds[i]);
+            for (int i = 0; i < BuyingItemIds.Length; i++)
+                kaito.clientBuyingIdList.Add(BuyingItemIds[i]);
 
             kaito.clientBuyingTagList.Clear();
-            kaito.clientBuyingTagList.Add("MODULE");
-            kaito.clientBuyingTagList.Add("ENERGY_CELL");
-            kaito.clientBuyingTagList.Add("LUXURY_ITEM");
+            for (int i = 0; i < BuyingTagIds.Length; i++)
+                kaito.clientBuyingTagList.Add(BuyingTagIds[i]);
 
             kaito.mainDialogue = new Dialogue();
             kaito.mainDialogue
-                .SetText("Kaito", Text("kaito.greeting", "Hello. I'm Kaito. I collect useful technology and well-made rare goods."))
+                .SetText("Kaito", Text("kaito.greeting", "Hello. I'm Kaito. I deal in useful raw materials and power cells."))
                 .NextDialogue()
-                .SetText("Kaito", Text("kaito.buy", "I'm buying selected weapons, modules, energy cells and luxury goods. I only carry what I can properly inspect."))
+                .SetText("Kaito", Text("kaito.buy", "I buy raw materials and batteries only. No weapons, modules or luxury goods."))
                 .NextDialogue()
-                .SetText("Kaito", Text("kaito.stock", "Today I brought advanced water filters, energy cells and a small selection of modules. Practical things, chosen carefully."))
+                .SetText("Kaito", Text("kaito.stock", "I sell two machines: the Recycler and the Advanced Battery Charger."))
                 .NextDialogue()
                 .SetText("Kaito", Text("kaito.farewell", "Good equipment lasts. Take care of it, and it will take care of you."))
                 .SetEndAction(PlaceKaitoStock);
@@ -278,29 +246,22 @@ namespace NewAnimeUniverse.KaitoNPC
 
             int placed = 0;
 
-            for (int i = 0; i < FixedStockIds.Length; i++)
-                placed += PlaceVanillaItem(store, FixedStockIds[i]);
+            // Only modded machine stock is allowed. If a machine mod is disabled,
+            // DirectoryMaster.Item returns null and that item is simply skipped.
+            for (int i = 0; i < SaleItemIds.Length; i++)
+                placed += PlaceMachineItem(store, SaleItemIds[i]);
 
-            // Two non-contraband modules, selected from enabled vanilla catalogue IDs.
-            List<string> availableModules = new List<string>(ModuleItemIds);
-            for (int i = 0; i < 2 && availableModules.Count > 0; i++)
-            {
-                string moduleId = RNG.GetRandomElement(availableModules.ToArray());
-                availableModules.Remove(moduleId);
-                placed += PlaceVanillaItem(store, moduleId);
-            }
-
-            log.Log("Kaito's stock was placed: " + placed + " item(s).");
+            log.Log("Kaito's machine-only stock was placed: " + placed + " item(s).");
         }
 
-        private int PlaceVanillaItem(PlayerStore store, string itemId)
+        private int PlaceMachineItem(PlayerStore store, string itemId)
         {
             try
             {
                 GameItem item = DirectoryMaster.Item(itemId, true);
                 if (item == null)
                 {
-                    log.Warning("Vanilla stock item was unavailable: " + itemId);
+                    log.Warning("Kaito machine stock is unavailable (is its mod enabled?): " + itemId);
                     return 0;
                 }
 
@@ -309,7 +270,7 @@ namespace NewAnimeUniverse.KaitoNPC
             }
             catch (Exception ex)
             {
-                log.Warning("Could not place " + itemId + " on Kaito's table: " + ex.Message);
+                log.Warning("Could not place machine " + itemId + " on Kaito's table: " + ex.Message);
                 return 0;
             }
         }
