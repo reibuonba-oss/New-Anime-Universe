@@ -27,7 +27,6 @@ namespace NewAnimeUniverse.AdvancedCharger
         public void OnEnable()
         {
             ModHook.OnModItemDirectoryInit += RegisterItems;
-            ModHook.OnGameLoadedLate += EnsureStarterCharger;
             ModHook.OnCreateTooltipLate += AddTooltip;
 
             ModHelper.AddDebugFunction(
@@ -40,7 +39,6 @@ namespace NewAnimeUniverse.AdvancedCharger
         public void OnDisable()
         {
             ModHook.OnModItemDirectoryInit -= RegisterItems;
-            ModHook.OnGameLoadedLate -= EnsureStarterCharger;
             ModHook.OnCreateTooltipLate -= AddTooltip;
             ModHelper.RemoveDebugFunctions(ModId);
 
@@ -129,37 +127,6 @@ namespace NewAnimeUniverse.AdvancedCharger
             sharedLog?.Log(
                 "Advanced Charger applied " + chargeAmount +
                 " kJ to " + chargedCount + " inserted battery item(s).");
-        }
-
-        private void EnsureStarterCharger()
-        {
-            try
-            {
-                if (PlayerStore.Instance == null) return;
-                if (ModHelper.GetModDataBool(ModId, "starter_charger_given")) return;
-
-                GameItem machine = DirectoryMaster.Item(ItemId, true);
-                if (machine == null)
-                {
-                    log.Warning("Could not create the starter Advanced Charger.");
-                    return;
-                }
-
-                ModHelper.MoveItemToInventory(machine);
-                if (machine.parentInventory != null)
-                {
-                    ModHelper.SetModDataBool(ModId, "starter_charger_given", true);
-                    log.Log("Granted one starter Advanced Battery Charger.");
-                }
-                else
-                {
-                    log.Warning("Player inventory is full; the starter charger will be retried on next load.");
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error("Could not grant the starter Advanced Charger: " + ex);
-            }
         }
 
         private void SpawnChargerForDebug()
