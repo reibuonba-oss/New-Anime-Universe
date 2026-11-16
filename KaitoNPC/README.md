@@ -6,7 +6,8 @@ A conservative, standalone Probably Stolen NPC mod.
 
 - **Buys only:** basic materials, refined materials, hand materials and energy cells. The exact vanilla item IDs `junk` and `scrap_metal` are also on his purchase whitelist.
 - **Does not buy:** weapons, modules, luxury goods or other item categories.
-- **Sells only:** Anime Universe Recycler (`nau_recycler`) and Advanced Battery Charger (`nau_advanced_charger`).
+- **Sells only:** Anime Universe Recycler (`nau_recycler`) for **399 credits**, and Advanced Battery Charger (`nau_advanced_charger`) for **799 credits**.
+- Prices are applied to Kaito's individual stock copies through `GameItem.unitValue`; the machine mods' own default values are unchanged.
 - Both machine sale items are optional runtime stock: the corresponding Recycler / Advanced Charger mod must be enabled and loaded. If one is unavailable, Kaito skips it instead of substituting unrelated vanilla stock.
 - **Appearance:** one 8% roll per in-game day; at most one visit per day.
 - **Budget:** 4,800 credits plus 25 credits per in-game day.
