@@ -6,28 +6,28 @@ Mod độc lập cho Probably Stolen.
 
 - **Tên:** Gian Thương
 - **Loại / chi phí:** Perk Vàng (NEUTRAL), tốn 1 điểm perk
-- **Khi bán hàng:** khách mua hàng thuộc về người chơi thì giá bán tăng 5%
-- **Khi mua hàng:** người chơi mua hàng thuộc về khách thì giá mua giảm 5%
-- **Phân tích giá:** dòng `Gian Thương (+5%)` xuất hiện khi bán; dòng `Gian Thương (-5%)` xuất hiện khi mua
-- **Giá và thanh toán:** giá từng món, tổng cộng, kiểm tra ngân sách và số Credits thanh toán dùng chung hàm tính giá đã điều chỉnh
+- **Khi bán hàng:** khách mua hàng thuộc về người chơi thì giá tăng 5%
+- **Khi mua hàng:** người chơi mua hàng thuộc về khách thì giá giảm 5%
+- **Phân tích giá:** dòng Gian Thương (+5%) hiện khi bán; dòng Gian Thương (-5%) hiện khi mua
+- **Giá và thanh toán:** cả hai hiệu ứng được thêm bằng ItemFeature gốc ở ValueStage.Market nên đi vào cùng công thức giá của game
 - **Tiền khởi đầu:** +50 Credits
 - **Hảo cảm:** -5 với từng phe có trong danh sách quan hệ của lượt chơi mới
 
 ## Cách hoạt động
 
-- Harmony prefix/postfix trên `GameItem.GetNegociatedValue()` điều chỉnh giá giao dịch: nhân 1.05 khi bán cho khách và nhân 0.95 khi mua từ khách.
-- Prefix guard ngăn việc áp dụng phần trăm nhiều lần nếu game gọi lồng nhau hàm tính giá cho cùng một món.
-- Harmony postfix trên `NegociationUIManager.AddFeatureSection` thêm một `ItemFeature` tạm thời ở `ValueStage.Market` để hiện đúng dòng cộng hoặc trừ trong phần phân tích.
-- Dòng phân tích chỉ phục vụ giao diện, không cộng/trừ tiền lần thứ hai.
+Game tự tạo các ItemFeature giao dịch ở hai điểm:
 
-## Ngôn ngữ
+- `GameItem.OnAddedToWeightedArea`: vật phẩm thuộc người chơi được khách mua. Mod thêm feature `TemporarySelling` với `+5` ở giai đoạn Market.
+- `GameItem.OnAddedToClientArea`: vật phẩm thuộc khách được người chơi mua. Mod thêm feature `ClientTemporary` với `-5` ở giai đoạn Market.
 
-Tên perk, mô tả và dòng phân tích giá dùng tiếng Việt trực tiếp để không phụ thuộc locale nội bộ của game.
+Đây là cùng hai loại feature mà game dùng cho Retail Markup và các hiệu ứng mua/bán khác. Giá từng món, tổng cộng, kiểm tra ngân sách, phần phân tích giá và thanh toán đều đọc từ danh sách ItemFeature này. Mod không còn cộng/trừ hậu kỳ trong `GetNegociatedValue()`, vì vậy tránh được tình trạng con số UI và tiền thanh toán đi theo hai luồng khác nhau.
 
-## Build
+Feature có ID riêng và được kiểm tra trước khi thêm để tránh bị nhân đôi khi game làm mới khu vực thương lượng. Các feature dùng kiểu tạm thời gốc của game để được dọn theo vòng đời giao dịch.
+
+## Biên dịch
 
 Giải nén `Managed.zip` vào `references/Managed/`, sau đó chạy:
 
     dotnet build GianThuongPerk/GianThuongPerk.csproj -c Release -p:ManagedDir="C:\\Path\\To\\references\\Managed"
 
-CI build và xác minh ZIP cài đặt. Cần kiểm thử trực tiếp trong game để xác nhận cả hai chiều mua/bán và giao diện thực tế.
+GitHub Actions biên dịch và xác minh ZIP cài đặt. Cần kiểm tra trong game cả hai chiều mua/bán để xác nhận phần trăm áp dụng đúng trên bản save thực tế.
