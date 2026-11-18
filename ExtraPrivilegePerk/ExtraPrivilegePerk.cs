@@ -7,6 +7,7 @@ namespace NewAnimeUniverse.ExtraPrivilegePerk
         private const string ModId = "new_anime_universe.extra_privilege";
         private const string PerkId = "new_anime_universe.extra_privilege.perk";
         private const int StartingCreditPenalty = 100;
+        private const int StartingPerkPointBonus = 1;
         private const int ExtraPerkSlots = 4;
 
         private ModLog log;
@@ -21,15 +22,16 @@ namespace NewAnimeUniverse.ExtraPrivilegePerk
             ModHelper.AddStartingPerk(
                 ModId,
                 PerkId,
-                cost: 0,
-                type: StartingPerk.StartingPerkType.NEUTRAL,
+                // A negative starting-perk cost refunds points to the new-game perk budget.
+                cost: -StartingPerkPointBonus,
+                type: StartingPerk.StartingPerkType.NEGATIVE,
                 name: () => ModHelper.GetLocalized(ModId, "perk_extra_privilege_name"),
                 description: () => ModHelper.GetLocalized(ModId, "perk_extra_privilege_desc"),
                 iconKey: ModId + ":extra_privilege_icon",
                 extraPerkSlots: ExtraPerkSlots);
 
             ModHook.OnNewGameStarted += ApplyStartingCreditPenalty;
-            log.Log("Registered Thêm Tí Đặc Quyền: +4 starting perk slots, -100 Credits on new-run start.");
+            log.Log("Registered Thêm Tí Đặc Quyền: +1 starting perk point, +4 starting perk slots, -100 Credits on new-run start.");
         }
 
         public void OnDisable()
