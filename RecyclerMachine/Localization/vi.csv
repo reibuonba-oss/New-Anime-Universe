@@ -1,12 +1,12 @@
 recycler.name,Máy Tái Chế Rác
-recycler.description,"Chuyển 4 Rác thành 1 Sắt Vụn sau một đêm. Cần năng lượng."
+recycler.description,"Chuyển 4 món Rác thành 1 Sắt Vụn sau một đêm. Máy cần năng lượng."
 recycler.flavor,"Một cỗ máy chắc chắn giúp tách kim loại có thể tái sử dụng khỏi rác hỏng."
 recycler.modules,Module
 recycler.input,Rác Đầu Vào
 recycler.output,Sắt Vụn Đầu Ra
-recycler.tooltip.recipe,"Cơ bản: 4 Rác → 1 Sắt Vụn qua đêm. Khi đạt 50% Hiệu năng: 8 Rác → 2 Sắt Vụn."
-recycler.tooltip.power,"Năng lượng mỗi chu kỳ: {0}"
-recycler.tooltip.performance,"Hiệu năng: {0}% — mẻ gấp đôi {1}"
+recycler.tooltip.recipe,"Công thức cơ bản: 4 Rác → 1 Sắt Vụn qua đêm. Khi đạt 50% Hiệu năng: 8 Rác → 2 Sắt Vụn."
+recycler.tooltip.power,"Năng lượng tiêu thụ mỗi chu kỳ: {0}"
+recycler.tooltip.performance,"Hiệu năng: {0}% — chế độ xử lý gấp đôi: {1}"
 recycler.unlocked,đã mở khóa
 recycler.locked,chưa mở khóa
-recycler.tooltip.modules,"Module Hiệu suất giúp giảm điện tiêu thụ. Module Chất lượng không có tác dụng."
+recycler.tooltip.modules,"Module Hiệu Suất giúp giảm điện tiêu thụ. Module Chất Lượng không có tác dụng."
