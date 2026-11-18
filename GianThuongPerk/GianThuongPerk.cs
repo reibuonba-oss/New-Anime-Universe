@@ -63,7 +63,7 @@ namespace NewAnimeUniverse.GianThuongPerk
 
             try
             {
-                harmony?.UnpatchSelf();
+                Harmony.UnpatchAll(ModId);
                 harmony = null;
             }
             catch (Exception ex)
