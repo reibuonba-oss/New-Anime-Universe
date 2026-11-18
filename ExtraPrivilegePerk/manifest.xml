@@ -3,8 +3,8 @@
   <ID>new_anime_universe.extra_privilege</ID>
   <Name>Thêm Tí Đặc Quyền</Name>
   <Author>New Anime Universe</Author>
-  <ModVersion>0.2.1</ModVersion>
-  <Description>A starting perk that grants 1 extra perk point for new-game perk selection, adds 4 starting perk slots, and deducts 100 Credits once when a new run begins. Includes a native 32x32 perk sprite.</Description>
+  <ModVersion>0.2.2</ModVersion>
+  <Description>Thiên phú khởi đầu cộng 1 điểm perk để chọn thiên phú, mở thêm 4 ô perk và trừ 100 Credits một lần khi bắt đầu lượt chơi mới. Có biểu tượng perk 32×32 theo chuẩn của game.</Description>
   <GameVersions>
     <Version>1.0.0</Version>
   </GameVersions>
