@@ -41,7 +41,7 @@ namespace NewAnimeUniverse.RecyclerMachine
             ModHelper.AddDebugFunction(
                 ModId,
                 ModHelper.DEBUG_CATEGORY_SPAWN,
-                "Spawn Recycler",
+                "Tạo Máy Tái Chế Rác",
                 SpawnRecyclerForDebug);
         }
 
@@ -113,7 +113,7 @@ namespace NewAnimeUniverse.RecyclerMachine
                 catch (Exception ex) { sharedLog?.Error("Recycler cycle failed: " + ex); }
             };
 
-            ModHelper.SetSource(machine, ModId, "Anime Universe — Recycler");
+            ModHelper.SetSource(machine, ModId, "Vũ Trụ Anime — Máy Tái Chế Rác");
             return machine;
         }
 
@@ -311,11 +311,11 @@ namespace NewAnimeUniverse.RecyclerMachine
                 int power = MachineryHelper.GetMachinePowerUsage(item);
                 builder.AddLine(Text("recycler.tooltip.recipe"), true, RenderHandler.ColorPalette.LightCyan);
                 builder.AddLine(
-                    ModHelper.GetLocalized(ModId, "recycler.tooltip.power", power),
+                    "Năng lượng tiêu thụ mỗi chu kỳ: " + power,
                     true, RenderHandler.ColorPalette.LightCyan);
                 builder.AddLine(
-                    ModHelper.GetLocalized(ModId, "recycler.tooltip.performance", performance,
-                        performance >= DoubleBatchPerformance ? Text("recycler.unlocked") : Text("recycler.locked")),
+                    "Hiệu năng: " + performance + "% — chế độ xử lý gấp đôi: " +
+                        (performance >= DoubleBatchPerformance ? "đã mở khóa" : "chưa mở khóa"),
                     true, RenderHandler.ColorPalette.LightCyan);
                 builder.AddLine(Text("recycler.tooltip.modules"), true, RenderHandler.ColorPalette.LightCyan);
             }
@@ -327,8 +327,20 @@ namespace NewAnimeUniverse.RecyclerMachine
 
         private static string Text(string key)
         {
-            string value = ModHelper.GetLocalized(ModId, key, null);
-            return string.IsNullOrEmpty(value) || value == key ? key : value;
+            switch (key)
+            {
+                case "recycler.name": return "Máy Tái Chế Rác";
+                case "recycler.description": return "Chuyển 4 món Rác thành 1 Sắt Vụn sau một đêm. Máy cần năng lượng.";
+                case "recycler.flavor": return "Một cỗ máy chắc chắn giúp tách kim loại có thể tái sử dụng khỏi rác hỏng.";
+                case "recycler.modules": return "Module";
+                case "recycler.input": return "Rác Đầu Vào";
+                case "recycler.output": return "Sắt Vụn Đầu Ra";
+                case "recycler.tooltip.recipe": return "Công thức cơ bản: 4 Rác → 1 Sắt Vụn qua đêm. Khi đạt 50% Hiệu năng: 8 Rác → 2 Sắt Vụn.";
+                case "recycler.tooltip.modules": return "Module Hiệu Suất giúp giảm điện tiêu thụ. Module Chất Lượng không có tác dụng.";
+                case "recycler.unlocked": return "đã mở khóa";
+                case "recycler.locked": return "chưa mở khóa";
+                default: return "Chưa có bản dịch: " + key;
+            }
         }
     }
 }
