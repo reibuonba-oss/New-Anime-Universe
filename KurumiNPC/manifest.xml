@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Manifest>
   <ID>new_anime_universe.kurumi_arms_dealer</ID>
-  <Name>Kurumi — Arms &amp; Module Dealer</Name>
+  <Name>Kurumi — Nhà Buôn Vũ Khí và Module</Name>
   <Author>New Anime Universe</Author>
-  <ModVersion>0.1.1</ModVersion>
-  <Description>Kurumi is a rare arms dealer. She buys firearms, melee weapons and gun modifications, and sells advanced energy cells and useful modules. Includes a custom portrait and Vietnamese/English dialogue. Kurumi has a 10% daily appearance chance.</Description>
+  <ModVersion>0.1.2</ModVersion>
+  <Description>Kurumi là một nhà buôn vũ khí hiếm. Cô ấy thu mua súng, vũ khí cận chiến và phụ kiện súng; đồng thời bán pin năng lượng cao cấp và các module hữu ích. Có chân dung riêng, hội thoại tiếng Việt và tỷ lệ xuất hiện 10% mỗi ngày.</Description>
   <GameVersions>
     <Version>1.0.0</Version>
   </GameVersions>
