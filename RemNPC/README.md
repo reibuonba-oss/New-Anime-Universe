@@ -1,41 +1,37 @@
-# Rem NPC — New Anime Universe
+# NPC Rem — Vũ Trụ Anime
 
-A Probably Stolen mod that adds Rem as a rare upper-level merchant.
+Mod cho Probably Stolen, bổ sung Rem làm thương nhân thuộc tầng lớp thượng lưu và xuất hiện khá hiếm.
 
-## Behaviour
+## Hoạt động
 
-- **Appearance:** one independent **11% roll per in-game day**, evaluated at `OnGenerateCustomerVeryLate`. Rem can visit at most once per day.
-- **Sells:** four randomly selected vanilla items from the game's `LUXURY_ITEM` catalogue per visit.
-- **Buys:** vanilla items with the `FOOD` type plus the supported water item IDs listed in `RemNPC.cs`.
-- **Dialogue:** custom opening dialogue and a separate buy-food/water line, localized in English and Vietnamese.
-- **Portrait:** uses `Textures/rem.png`, registered under a unique customer sprite key.
+- **Tỷ lệ xuất hiện:** mỗi ngày trong game có một lần tung xác suất độc lập **11%** tại sự kiện OnGenerateCustomerVeryLate. Rem xuất hiện tối đa một lần mỗi ngày.
+- **Bày bán:** bốn vật phẩm gốc được chọn ngẫu nhiên từ danh mục LUXURY_ITEM của game trong mỗi lần ghé thăm.
+- **Thu mua:** vật phẩm gốc thuộc loại FOOD và các ID vật phẩm nước được hỗ trợ, liệt kê trong RemNPC.cs.
+- **Hội thoại:** lời chào riêng, lời mời xem hàng và câu thoại thu mua thực phẩm/nước bằng tiếng Việt.
+- **Chân dung:** dùng ảnh Textures/rem.png, đăng ký bằng khóa sprite khách hàng riêng.
 
-The customer uses `StoreClient.ClientIntent.SELLNBUY`, so she can trade in both directions during the same visit. Her buy budget starts at 1,600 and scales by 20 per in-game day.
+Khách sử dụng StoreClient.ClientIntent.SELLNBUY nên có thể mua và bán trong cùng một lần ghé thăm. Ngân sách thu mua bắt đầu từ 1.600 Credits và tăng thêm 20 Credits mỗi ngày trong game.
 
-## Build
+## Biên dịch
 
-The repository contains `Managed.zip` at its root. Extract it into `references/Managed/`, then run:
+Repository có Managed.zip ở thư mục gốc. Giải nén vào references/Managed/, sau đó chạy:
 
-```powershell
-dotnet build RemNPC.csproj -c Release
-```
+    dotnet build RemNPC.csproj -c Release
 
-Or provide another reference folder:
+Hoặc chỉ định thư mục thư viện tham chiếu khác:
 
-```powershell
-dotnet build RemNPC.csproj -c Release -p:ManagedDir="C:\Path\To\Probably Stolen_Data\Managed"
-```
+    dotnet build RemNPC.csproj -c Release -p:ManagedDir="C:\Path\To\Probably Stolen_Data\Managed"
 
-The GitHub Actions workflow `.github/workflows/build-remnpc.yml` builds the DLL against the repository's `Managed.zip` and publishes an installable `RemNPC` ZIP artifact.
+Workflow .github/workflows/build-remnpc.yml sẽ biên dịch DLL với Managed.zip của repository và xuất ZIP cài đặt RemNPC.
 
-## Install
+## Cài đặt
 
-Extract the built `RemNPC` folder into the game's `Mods/` directory, enable it in the Mods menu, and restart the game.
+Giải nén thư mục RemNPC được build vào Mods/ của game, bật mod trong menu Mods và khởi động lại game.
 
-## Technical notes
+## Ghi chú kỹ thuật
 
-- Uses the native `IMod` lifecycle and `ModHook` customer/assets hooks.
-- Adds the customer through `StoreClientManager.AddClient` from `OnGenerateCustomerVeryLate`.
-- The one-roll-per-day and one-visit-per-day guards are saved through the mod's run data.
-- The customer portrait is installed through `SpriteDict.Instance.spriteDictionary`. Customer sprite registration is a compatibility-sensitive game surface; verify it after game updates.
-- This source was prepared from the repository's reference assemblies and public modding examples. It still requires a successful CI build and an in-game test before it should be described as fully verified.
+- Sử dụng vòng đời IMod và các sự kiện ModHook về khách hàng/tài nguyên.
+- Thêm khách hàng bằng StoreClientManager.AddClient từ OnGenerateCustomerVeryLate.
+- Lưu chốt tung xác suất mỗi ngày và giới hạn một lượt ghé thăm mỗi ngày bằng dữ liệu riêng của mod.
+- Chân dung khách hàng được đăng ký qua SpriteDict.Instance.spriteDictionary. Cơ chế này nhạy cảm với thay đổi của game, nên cần kiểm tra sau các bản cập nhật.
+- CI chỉ xác nhận biên dịch và đóng gói; cần kiểm thử trong game để xác nhận Rem xuất hiện và giao dịch hai chiều hoạt động.
