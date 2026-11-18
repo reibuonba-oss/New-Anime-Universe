@@ -66,25 +66,25 @@ namespace NewAnimeUniverse.HanabiNPC
         private static GameItem CreateHanabiMask()
         {
             GameItem item = ItemDirectory.CreateEmptyItem(MaskItemId);
-            item.name = Text("hanabi.mask.name", "Hanabi Mask");
-            item.shortDescription = Text("hanabi.mask.description", "A decorative mask designed for Hanabi.");
-            item.flavorText = Text("hanabi.mask.flavor", "A striking mask with a delicate floral motif.");
+            item.name = Text("hanabi.mask.name", "Mặt Nạ Hanabi");
+            item.shortDescription = Text("hanabi.mask.description", "Một chiếc mặt nạ trang trí được thiết kế dành riêng cho Hanabi.");
+            item.flavorText = Text("hanabi.mask.flavor", "Chiếc mặt nạ nổi bật với họa tiết hoa tinh tế.");
             item.unitValue = MaskMarketValue;
 
             // The mask deliberately belongs to both requested categories.
             item.SetGameItemType("HOUSEHOLD_GOOD");
             item.SetGameItemType("LUXURY_ITEM");
             item.SetSpriteAndShapeFromMod(ModId, "hanabi_mask");
-            ModHelper.SetSource(item, ModId, "New Anime Universe");
+            ModHelper.SetSource(item, ModId, "Vũ Trụ Anime");
             return item;
         }
 
         private static GameItem CreateHanabiGun()
         {
             GameItem item = ItemDirectory.CreateEmptyItem(GunItemId);
-            item.name = Text("hanabi.gun.name", "Hanabi Gun");
-            item.shortDescription = Text("hanabi.gun.description", "A custom pink revolver made for Hanabi.");
-            item.flavorText = Text("hanabi.gun.flavor", "A bright pink finish and a small cherry-blossom emblem.");
+            item.name = Text("hanabi.gun.name", "Súng Hanabi");
+            item.shortDescription = Text("hanabi.gun.description", "Một khẩu súng lục ổ xoay màu hồng được làm riêng cho Hanabi.");
+            item.flavorText = Text("hanabi.gun.flavor", "Lớp sơn hồng rực rỡ cùng biểu tượng hoa anh đào nhỏ.");
             item.unitValue = GunMarketValue;
 
             // This adds the WEAPON classification. It is a custom trade item, not a scripted firing mechanic.
@@ -244,11 +244,11 @@ namespace NewAnimeUniverse.HanabiNPC
 
             hanabi.mainDialogue = new Dialogue();
             hanabi.mainDialogue
-                .SetText("Hanabi", Text("hanabi.greeting", "Hello there. I'm Hanabi. I brought two special pieces for today's visit."))
+                .SetText("Hanabi", Text("hanabi.greeting", "Xin chào. Tôi là Hanabi. Hôm nay tôi mang đến hai món hàng đặc biệt."))
                 .NextDialogue()
-                .SetText("Hanabi", Text("hanabi.buy", "I'm also buying power cells and modules. Show me what you have."))
+                .SetText("Hanabi", Text("hanabi.buy", "Tôi cũng đang thu mua pin năng lượng và module. Cho tôi xem những món anh có."))
                 .NextDialogue()
-                .SetText("Hanabi", Text("hanabi.stock", "The Hanabi Mask and Hanabi Gun are both available today. My prices include a small 5% premium over their base market values."))
+                .SetText("Hanabi", Text("hanabi.stock", "Mặt Nạ Hanabi và Súng Hanabi đều có sẵn hôm nay. Giá bán đã cộng thêm 5% so với giá trị thị trường cơ bản."))
                 .SetEndAction(PlaceHanabiStock);
 
             hanabi.AddBasicDialog();
@@ -296,10 +296,7 @@ namespace NewAnimeUniverse.HanabiNPC
 
         private static string Text(string key, string fallback)
         {
-            string value = ModHelper.GetLocalized(ModId, key, null);
-            if (string.IsNullOrEmpty(value) || value == key)
-                return fallback;
-            return value;
+            return fallback;
         }
     }
 }
