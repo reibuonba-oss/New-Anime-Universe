@@ -1,26 +1,26 @@
-# Anime Universe — Advanced Battery Charger
+# Vũ Trụ Anime — Trạm Sạc Pin Nâng Cao
 
-Standalone mod for Probably Stolen.
+Mod độc lập dành cho Probably Stolen.
 
-## Charging rate
+## Tốc độ sạc
 
-The vanilla Recharger applies 3 kJ to each inserted power-source item per nightly cycle. With Commercial Power unlocked, the vanilla rate is 6 kJ.
+Máy Sạc Pin tiêu chuẩn nạp 3 kJ cho mỗi viên pin được lắp vào sau mỗi chu kỳ qua đêm. Khi mở khóa Điện Thương Mại, tốc độ tiêu chuẩn là 6 kJ.
 
-The Advanced Battery Charger doubles both rates:
+Trạm Sạc Pin Nâng Cao tăng gấp đôi cả hai mức:
 
-- **6 kJ per inserted battery per night** without Commercial Power.
-- **12 kJ per inserted battery per night** with Commercial Power unlocked.
+- **6 kJ cho mỗi viên pin mỗi đêm** khi chưa mở khóa Điện Thương Mại.
+- **12 kJ cho mỗi viên pin mỗi đêm** khi đã mở khóa Điện Thương Mại.
 
-It uses the game's native `PowerHelper.ChargeBattery` method, so the normal maximum-capacity handling and blackout restrictions remain in place. It also follows the vanilla rule that the grid must be powered.
+Máy sử dụng phương thức gốc `PowerHelper.ChargeBattery`, vì vậy các giới hạn dung lượng tối đa và điều kiện mất điện của game vẫn được áp dụng. Máy cũng tuân theo quy tắc gốc: điện lưới phải đang bật.
 
-## Interface and installation
+## Giao diện và cài đặt
 
-- Reuses the vanilla Recharger battery panel and inventory grid.
-- Accepts items carrying the vanilla `power_source_item` tag.
-- Does **not** grant a free station on game start. Purchase it from Kaito when his shop visit is available; enable Kaito NPC as well.
-- Includes an F9 debug spawn entry for testing.
-- Build against the game's `Managed.zip` reference assemblies.
+- Sử dụng lại bảng pin và lưới kho đồ của máy Sạc Pin tiêu chuẩn.
+- Chấp nhận vật phẩm có thẻ gốc `power_source_item`.
+- **Không** tặng máy miễn phí khi bắt đầu game. Hãy mua từ Kaito khi anh ấy ghé cửa hàng; cần bật cả mod NPC Kaito.
+- Có mục tạo máy thử nghiệm bằng phím F9.
+- Biên dịch dựa trên bộ thư viện tham chiếu trong `Managed.zip` của game.
 
-Extract the generated `AdvancedCharger.zip` into the game's `Mods` directory, enable **Anime Universe — Advanced Battery Charger** and **Kaito — The Collector**, and restart the game. Purchase the station from Kaito; no free starter copy is given.
+Giải nén `AdvancedCharger.zip` vào thư mục `Mods` của game, bật **Vũ Trụ Anime — Trạm Sạc Pin Nâng Cao** và **Kaito — Nhà Sưu Tầm**, sau đó khởi động lại game. Hãy mua máy từ Kaito; người chơi không được cấp máy miễn phí.
 
-The CI build/package check verifies compilation and ZIP contents. A real in-game save test is still required to confirm the charging cycle on the exact installed game version.
+CI xác nhận DLL biên dịch được và ZIP có đủ tệp. Vẫn cần kiểm tra chu kỳ sạc trong một bản lưu thực tế với đúng phiên bản game đang cài.
