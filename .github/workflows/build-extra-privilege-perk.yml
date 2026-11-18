@@ -27,26 +27,27 @@ jobs:
 
       - name: Extract game reference assemblies
         shell: pwsh
-        run: Expand-Archive -Path "${{ github.workspace }}\\Managed.zip" -DestinationPath "${{ github.workspace }}\\references\\Managed" -Force
+        run: Expand-Archive -Path "${{ github.workspace }}\Managed.zip" -DestinationPath "${{ github.workspace }}\references\Managed" -Force
 
       - name: Build Extra Privilege Perk
-        run: dotnet build ExtraPrivilegePerk/ExtraPrivilegePerk.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\\references\\Managed"
+        run: dotnet build ExtraPrivilegePerk/ExtraPrivilegePerk.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\references\Managed"
 
       - name: Assemble installable mod
         shell: pwsh
         run: |
-          $root = "${{ runner.temp }}\\ExtraPrivilegePerkPackage"
+          $root = "${{ runner.temp }}\ExtraPrivilegePerkPackage"
           $package = Join-Path $root "ExtraPrivilegePerk"
           New-Item -ItemType Directory -Force -Path $package | Out-Null
-          Copy-Item ExtraPrivilegePerk\\manifest.xml $package\\manifest.xml
-          Copy-Item ExtraPrivilegePerk\\bin\\Release\\netstandard2.1\\ExtraPrivilegePerk.dll $package\\ExtraPrivilegePerk.dll
-          Copy-Item -Recurse ExtraPrivilegePerk\\Localization $package\\Localization
-          Copy-Item -Recurse ExtraPrivilegePerk\\Textures $package\\Textures
-          Compress-Archive -Path "$root\\*" -DestinationPath "${{ runner.temp }}\\ExtraPrivilegePerk.zip" -Force
+          Copy-Item "ExtraPrivilegePerk\manifest.xml" (Join-Path $package "manifest.xml")
+          Copy-Item "ExtraPrivilegePerk\bin\Release\netstandard2.1\ExtraPrivilegePerk.dll" (Join-Path $package "ExtraPrivilegePerk.dll")
+          Copy-Item -Recurse "ExtraPrivilegePerk\Localization" (Join-Path $package "Localization")
+          if (!(Test-Path "ExtraPrivilegePerk\Textures\extra_privilege_icon.png")) { throw "Perk icon is missing." }
+          Copy-Item -Recurse "ExtraPrivilegePerk\Textures" (Join-Path $package "Textures")
+          Compress-Archive -Path "$root\*" -DestinationPath "${{ runner.temp }}\ExtraPrivilegePerk.zip" -Force
 
       - name: Upload installable mod package
         uses: actions/upload-artifact@v4
         with:
           name: ExtraPrivilegePerk
-          path: ${{ runner.temp }}\\ExtraPrivilegePerk.zip
+          path: ${{ runner.temp }}\ExtraPrivilegePerk.zip
           if-no-files-found: error
