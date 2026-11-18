@@ -1,37 +1,37 @@
-# Anime Universe — Recycler Machine
+# Vũ Trụ Anime — Máy Tái Chế Rác
 
-A standalone, vanilla-style Probably Stolen machine.
+Máy móc độc lập cho Probably Stolen, sử dụng giao diện theo phong cách máy móc gốc của game.
 
-## Recipe
+## Công thức
 
-- Input grid: **12×4**, enough room for eight standard 3×2 Junk items at once.
-- Base cycle: **4 Junk** (`junk`) → **1 Scrap Metal** (`scrap_metal`), overnight.
-- Base energy draw: **5 energy per cycle**.
-- At **50% or more Performance**: when at least 8 Junk are loaded, the machine processes **8 Junk → 2 Scrap Metal** in that same cycle.
-- If Performance is below 50%, the machine processes only the base batch.
-- Efficiency modules use the game's native machine-power calculation and reduce the draw.
-- Quality modules do not change this machine's recipe, output, or power logic.
+- Lưới đầu vào: **12×4**, đủ chỗ cho tối đa tám vật phẩm Rác tiêu chuẩn kích thước 3×2 cùng lúc.
+- Chu kỳ cơ bản: **4 Rác** (`junk`) → **1 Sắt Vụn** (`scrap_metal`), hoàn tất qua đêm.
+- Điện tiêu thụ cơ bản: **5 năng lượng mỗi chu kỳ**.
+- Khi đạt **từ 50% Hiệu năng trở lên** và có ít nhất 8 Rác: máy xử lý **8 Rác → 2 Sắt Vụn** trong cùng chu kỳ.
+- Nếu Hiệu năng dưới 50%, máy chỉ xử lý mẻ cơ bản.
+- Module Hiệu Suất sử dụng phép tính điện tiêu thụ gốc của máy móc trong game và giúp giảm điện.
+- Module Chất Lượng không thay đổi công thức, sản phẩm hoặc cách tiêu thụ điện của máy.
 
-The input accepts only the vanilla item id `junk`; it will not consume other items that merely carry a JUNK type (for example improvised weapons).
+Ô đầu vào chỉ nhận vật phẩm gốc có ID `junk`; máy sẽ không tiêu thụ những vật phẩm khác chỉ mang loại JUNK, ví dụ vũ khí tự chế.
 
-## Interface and compatibility
+## Giao diện và tương thích
 
-- Uses the game's Machinery window, battery slot, universal module bay, and native overnight machine cycle callback.
-- Uses the vanilla furnace sprite and an original item ID.
-- Does not patch game methods with Harmony and declares no extra capabilities.
-- Grants one starter machine to the player's inventory on the first loaded run where the mod is enabled. If the inventory is full, it retries on the next load.
-- An F9 debug spawn button is included for testing builds.
+- Sử dụng cửa sổ Máy Móc, ô pin, kho module đa năng và sự kiện xử lý qua đêm gốc của game.
+- Dùng hình ảnh lò nung gốc và ID vật phẩm riêng.
+- Không vá phương thức game bằng Harmony và không khai báo quyền truy cập bổ sung.
+- Cấp một máy khởi đầu vào kho đồ người chơi trong lần tải game đầu tiên khi mod được bật. Nếu kho đồ đầy, mod sẽ thử cấp lại ở lần tải tiếp theo.
+- Có nút tạo máy thử nghiệm bằng phím F9.
 
-## Build
+## Biên dịch
 
-Extract the repository's `Managed.zip` into `references/Managed/`, then run:
+Giải nén `Managed.zip` của repository vào `references/Managed/`, sau đó chạy:
 
 ```powershell
 dotnet build RecyclerMachine/RecyclerMachine.csproj -c Release -p:ManagedDir="C:\Path\To\references\Managed"
 ```
 
-## Install
+## Cài đặt
 
-Extract the generated ZIP into the game's `Mods/` directory. Enable **Anime Universe — Recycler Machine** in the Mods menu and restart the game.
+Giải nén ZIP được tạo ra vào thư mục `Mods/` của game. Bật **Vũ Trụ Anime — Máy Tái Chế Rác** trong menu Mods và khởi động lại game.
 
-The DLL build and package checks do not replace an in-game save test. Confirm the nightly cycle, energy draw, output capacity, and module threshold on the exact game build before treating this as production-ready.
+Việc DLL biên dịch và ZIP được đóng gói thành công không thay thế cho kiểm thử trong bản lưu thực tế. Hãy xác nhận chu kỳ qua đêm, mức tiêu thụ năng lượng, dung lượng đầu ra và ngưỡng module trên đúng phiên bản game đang dùng.
