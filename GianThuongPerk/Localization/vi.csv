@@ -1,3 +1,3 @@
 perk_gian_thuong_name,Gian Thương
-perk_gian_thuong_desc,"Perk Vàng, tốn 1 điểm perk. Tăng thêm 5% vào giá hiển thị mỗi khi khách mua hàng của bạn; số Credits nhận được cũng đã bao gồm phần tăng này. Khởi đầu thêm 50 Credits, nhưng giảm 5 điểm hảo cảm với tất cả các phe."
-perk_gian_thuong_trade_line,"Gian Thương: +5% giá bán (đã tính vào giá hiển thị)"
+perk_gian_thuong_desc,"Perk Vàng, tốn 1 điểm perk. Tăng 5% vào giá bán hiển thị khi khách mua hàng của bạn; dòng Gian Thương (+5%) xuất hiện trong phần Thị Trường và Nhà Buôn. Khởi đầu thêm 50 Credits, nhưng giảm 5 điểm hảo cảm với tất cả các phe."
+perk_gian_thuong_market_feature,Gian Thương
