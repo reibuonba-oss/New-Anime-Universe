@@ -1,55 +1,37 @@
-# Kurumi NPC — New Anime Universe
+# NPC Kurumi — Vũ Trụ Anime
 
-A standalone Probably Stolen NPC mod. Kurumi is an upper-level arms dealer who buys weapons and sells advanced energy cells and modules.
+Mod NPC độc lập cho Probably Stolen. Kurumi là nhà buôn vũ khí thuộc tầng lớp thượng lưu, chuyên thu mua vũ khí và bán pin năng lượng cao cấp cùng module.
 
-## Behaviour
+## Hoạt động
 
-- **Appearance:** one independent **10% roll per in-game day** at `OnGenerateCustomerVeryLate`; at most one Kurumi visit per day.
-- **Buys:** firearms, melee weapons and gun modifications. The client has the native `SELLNBUY` intent and uses the `WEAPON` and `GUN_MOD` buying tags, with an explicit vanilla weapon-ID list as a fallback.
-- **Sells:** an Energy Cell (Mk. II), a Self Charging Energy Cell, and four randomly selected specialist modules on each visit.
-- **Dialogue:** custom Kurumi dialogue localized in Vietnamese and English.
-- **Portrait:** uses the supplied `Textures/kurumi.png` portrait, registered under a unique sprite key.
+- **Tỷ lệ xuất hiện:** mỗi ngày trong game có một lần tung xác suất độc lập **10%** tại sự kiện OnGenerateCustomerVeryLate; Kurumi xuất hiện tối đa một lần mỗi ngày.
+- **Thu mua:** súng, vũ khí cận chiến và phụ kiện súng. Khách sử dụng ý định giao dịch SELLNBUY của game, cùng các thẻ WEAPON và GUN_MOD và danh sách ID vũ khí gốc dự phòng.
+- **Bày bán:** một Pin Năng Lượng Mk. II, một Pin Tự Sạc và bốn module chuyên dụng được chọn ngẫu nhiên trong mỗi lần ghé thăm.
+- **Hội thoại:** lời thoại riêng của Kurumi bằng tiếng Việt.
+- **Chân dung:** dùng ảnh Textures/kurumi.png, đăng ký bằng khóa sprite riêng.
 
-The buying budget starts at 6,000 and increases by 50 per in-game day. This is the NPC's offer budget, not a guaranteed purchase price.
+Ngân sách thu mua bắt đầu từ 6.000 Credits và tăng thêm 50 Credits cho mỗi ngày trong game. Đây là ngân sách chào mua của NPC, không phải mức giá mua được đảm bảo.
 
-## Build
+## Biên dịch
 
-The repository contains `Managed.zip` at its root. Extract it into `references/Managed/`, then run:
+Repository có Managed.zip ở thư mục gốc. Giải nén vào references/Managed/, sau đó chạy:
 
-```powershell
-dotnet build KurumiNPC.csproj -c Release
-```
+    dotnet build KurumiNPC.csproj -c Release
 
-Or specify another reference folder:
+Hoặc chỉ định một thư mục thư viện tham chiếu khác:
 
-```powershell
-dotnet build KurumiNPC.csproj -c Release -p:ManagedDir="C:\Path\To\Probably Stolen_Data\Managed"
-```
+    dotnet build KurumiNPC.csproj -c Release -p:ManagedDir="C:\Path\To\Probably Stolen_Data\Managed"
 
-The workflow `.github/workflows/build-kuruminpc.yml` builds the DLL and publishes an installable ZIP artifact.
+Workflow .github/workflows/build-kuruminpc.yml sẽ biên dịch DLL và xuất ZIP cài đặt.
 
-## Install
+## Cài đặt
 
-Extract the built `KurumiNPC.zip` so the game folder contains:
+Giải nén KurumiNPC.zip để thư mục game có cấu trúc Mods/KurumiNPC/ gồm manifest.xml, KurumiNPC.dll, Textures/kurumi.png và Localization/. Bật Kurumi trong menu Mods và khởi động lại game.
 
-```
-Probably Stolen/
-└── Mods/
-    └── KurumiNPC/
-        ├── manifest.xml
-        ├── KurumiNPC.dll
-        ├── Textures/kurumi.png
-        └── Localization/
-            ├── en.csv
-            └── vi.csv
-```
+## Ghi chú kỹ thuật
 
-Enable Kurumi in the Mods menu and restart the game.
-
-## Technical notes
-
-- Uses the native `IMod` lifecycle and customer/assets hooks.
-- Adds the NPC through `StoreClientManager.AddClient`.
-- Uses per-run ModData guards so the appearance roll is evaluated once per day.
-- Registers its portrait through `SpriteDict.Instance.spriteDictionary`. This is a compatibility-sensitive customer-sprite surface and should be checked after game updates.
-- A successful CI build confirms compilation against this repository's `Managed.zip`; it does not replace an in-game test of customer arrival and two-way trading.
+- Sử dụng vòng đời IMod và các sự kiện khách hàng/tài nguyên gốc.
+- Thêm NPC bằng StoreClientManager.AddClient.
+- Lưu trạng thái tung xác suất mỗi ngày bằng ModData riêng của lượt chơi.
+- Đăng ký chân dung thông qua SpriteDict.Instance.spriteDictionary. Đây là bề mặt tương thích nhạy cảm với cập nhật game, nên cần kiểm tra lại sau mỗi bản cập nhật.
+- CI xác nhận biên dịch với Managed.zip của repository; vẫn cần kiểm tra trong game việc NPC xuất hiện và giao dịch hai chiều.
