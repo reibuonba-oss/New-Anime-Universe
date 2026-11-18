@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+
 using HarmonyLib;
 
 namespace NewAnimeUniverse.GianThuongPerk
@@ -9,13 +9,14 @@ namespace NewAnimeUniverse.GianThuongPerk
         public const string ModId = "new_anime_universe.gian_thuong";
         public const string PerkId = "new_anime_universe.gian_thuong.perk";
 
-        internal const string BreakdownFeatureId = "new_anime_universe_gian_thuong_markup";
+        internal const string TradeFeatureId = "new_anime_universe_gian_thuong_trade_price";
         private const int StartingCredits = 50;
         private const double StartingFactionReputationPenalty = 5d;
         private const int PerkPointCost = 1;
 
         private static ModLog sharedLog;
-        private static bool warnedPricePatch;
+        private static bool loggedSaleFeature;
+        private static bool loggedBuyFeature;
 
         private ModLog log;
         private Harmony harmony;
@@ -24,7 +25,8 @@ namespace NewAnimeUniverse.GianThuongPerk
         {
             log = new ModLog(manifest);
             sharedLog = log;
-            warnedPricePatch = false;
+            loggedSaleFeature = false;
+            loggedBuyFeature = false;
         }
 
         public void OnEnable()
@@ -32,11 +34,10 @@ namespace NewAnimeUniverse.GianThuongPerk
             ModHelper.AddStartingPerk(
                 ModId,
                 PerkId,
-                // Keep the native amber/gold Neutral appearance while charging one perk point.
                 cost: PerkPointCost,
                 type: StartingPerk.StartingPerkType.NEUTRAL,
                 name: () => "Gian Thương",
-                description: () => "Perk Vàng, tốn 1 điểm perk. Giá bán hàng của bạn tăng 5% khi khách mua; giá mua hàng từ khách giảm 5%. Cả hai mức điều chỉnh đều hiển thị trong phần phân tích giá. Khởi đầu thêm 50 Credits, nhưng giảm 5 điểm hảo cảm với tất cả các phe.",
+                description: () => "Perk Vàng, tốn 1 điểm perk. Khi khách mua hàng của bạn, giá bán tăng 5%. Khi bạn mua hàng từ khách, giá mua giảm 5%. Cả hai mức điều chỉnh đều hiện trong phần phân tích giá. Khởi đầu thêm 50 Credits, nhưng giảm 5 điểm hảo cảm với tất cả các phe.",
                 iconKey: ModId + ":gian_thuong_icon");
 
             ModHook.OnNewGameStarted += ApplyStartingEffects;
@@ -45,15 +46,15 @@ namespace NewAnimeUniverse.GianThuongPerk
             {
                 harmony = new Harmony(ModId);
                 harmony.PatchAll();
-                log.Log("Installed Gian Thuong: +5% player sale prices and -5% customer purchase prices, with Market breakdown entries.");
+                log.Log("Đã cài đặt Gian Thương: +5% giá bán và -5% giá mua bằng ItemFeature gốc của game.");
             }
             catch (Exception ex)
             {
-                log.Error("Could not install the Gian Thuong trade patches: " + ex);
+                log.Error("Không thể cài các hiệu ứng giao dịch của Gian Thương: " + ex);
                 harmony = null;
             }
 
-            log.Log("Registered Gian Thuong: +5% sale price, -5% purchase price, +50 starting Credits, -5 reputation with every faction; costs 1 perk point.");
+            log.Log("Đã đăng ký Gian Thương: +5% khi bán cho khách, -5% khi mua từ khách, +50 Credits khởi đầu, -5 hảo cảm với mọi phe; tốn 1 điểm perk.");
         }
 
         public void OnDisable()
@@ -68,13 +69,13 @@ namespace NewAnimeUniverse.GianThuongPerk
             }
             catch (Exception ex)
             {
-                log?.Warning("Could not remove Gian Thuong Harmony patches: " + ex.Message);
+                log?.Warning("Không thể gỡ Harmony patch của Gian Thương: " + ex.Message);
             }
 
             if (ReferenceEquals(sharedLog, log))
                 sharedLog = null;
 
-            log?.Log("Unregistered Gian Thuong.");
+            log?.Log("Đã tắt Gian Thương.");
         }
 
         internal static bool IsPerkActive()
@@ -82,30 +83,34 @@ namespace NewAnimeUniverse.GianThuongPerk
             return ModHelper.IsStartingPerkActive(PerkId);
         }
 
-        /// <summary>
-        /// Returns +5 for player-owned goods sold to a customer, -5 for customer-owned
-        /// goods bought by the player, and 0 outside an active customer negotiation.
-        /// This follows the same ownership test used by the native negotiation item lists.
-        /// </summary>
-        internal static int GetTradePriceModifierPercent(GameItem item)
+        internal static void AddTradeFeature(GameItem item, int percent, ItemFeature.FeatureType featureType)
         {
             if (item == null || !IsPerkActive())
-                return 0;
-
-            PlayerStore store = PlayerStore.Instance;
-            if (store == null || store.currentClientInstance == null)
-                return 0;
-
-            return GeneralHelper.IsItemOwned(item) ? 5 : -5;
-        }
-
-        internal static void LogPricePatchFailure(Exception ex)
-        {
-            if (warnedPricePatch)
                 return;
 
-            warnedPricePatch = true;
-            sharedLog?.Warning("Gian Thuong could not apply its trade price adjustment: " + ex.Message);
+            if (item.IsAlreadyContainFeatureWithId(TradeFeatureId))
+                return;
+
+            try
+            {
+                ItemFeature feature = new ItemFeature(featureType);
+                feature.identifier = TradeFeatureId;
+                feature.category = TradeFeatureId;
+                feature.valueStage = ItemFeature.ValueStage.Market;
+                feature.SetPublicDisplay("Gian Thương");
+                feature.SetActualDisplay("Gian Thương");
+                feature.isFeatureMatch = true;
+                feature.SetPreExposedValueMod(percent);
+
+                // This is a native Market-stage ItemFeature. The game's own price
+                // calculation and price-breakdown UI both read this same feature.
+                item.AddItemFeature(feature);
+            }
+            catch (Exception ex)
+            {
+                sharedLog?.Error("Không thể thêm điều chỉnh giá Gian Thương vào vật phẩm " +
+                    item.identifier + ": " + ex);
+            }
         }
 
         private void ApplyStartingEffects(string scenarioId)
@@ -113,15 +118,13 @@ namespace NewAnimeUniverse.GianThuongPerk
             if (!IsPerkActive())
                 return;
 
-            // Mod data is per-run. The guard prevents duplicate grants if a new-game hook
-            // is accidentally fired more than once by another mod or a future game update.
             if (ModHelper.GetModDataBool(ModId, "starting_effects_applied"))
                 return;
 
             PlayerStore store = PlayerStore.Instance;
             if (store == null)
             {
-                log?.Warning("Gian Thuong was selected, but PlayerStore was unavailable; starting effects were not applied.");
+                log?.Warning("Đã chọn Gian Thương nhưng PlayerStore chưa sẵn sàng; không thể áp dụng hiệu ứng khởi đầu.");
                 return;
             }
 
@@ -141,157 +144,89 @@ namespace NewAnimeUniverse.GianThuongPerk
             }
 
             ModHelper.SetModDataBool(ModId, "starting_effects_applied", true);
-            log?.Log(
-                "Applied Gian Thuong starting effects: +" + StartingCredits +
-                " Credits and -" + StartingFactionReputationPenalty +
-                " reputation with " + factionsAdjusted + " factions.");
+            log?.Log("Đã áp dụng hiệu ứng khởi đầu Gian Thương: +" + StartingCredits +
+                " Credits và -" + StartingFactionReputationPenalty +
+                " hảo cảm với " + factionsAdjusted + " phe.");
+        }
+
+        internal static void LogFeatureApplied(bool selling)
+        {
+            if (selling && !loggedSaleFeature)
+            {
+                loggedSaleFeature = true;
+                sharedLog?.Log("Gian Thương đã thêm ItemFeature +5% vào hàng của người chơi đang bán cho khách.");
+            }
+            else if (!selling && !loggedBuyFeature)
+            {
+                loggedBuyFeature = true;
+                sharedLog?.Log("Gian Thương đã thêm ItemFeature -5% vào hàng khách đang bán cho người chơi.");
+            }
         }
     }
 
     /// <summary>
-    /// The negotiation rows, total, affordability checks and settlement use
-    /// GameItem.GetNegociatedValue(). Apply the modifier to the shared returned
-    /// value so both displayed prices and actual Credits use the same result.
-    /// A prefix guard prevents nested GetNegociatedValue calls for donation
-    /// recalculation from applying the percentage more than once.
+    /// The game itself adds player-owned items to its weighted negotiation area.
+    /// This is the same point where the game adds RetailMarkUp and other
+    /// TemporarySelling features. Gian Thuong adds a native +5% Market feature.
     /// </summary>
-    [HarmonyPatch(typeof(GameItem), "GetNegociatedValue")]
-    [HarmonyPriority(Priority.Last)]
-    internal static class GianThuongTradePricePatch
+    [HarmonyPatch(typeof(GameItem), "OnAddedToWeightedArea")]
+    internal static class GianThuongPlayerSaleFeaturePatch
     {
-        [ThreadStatic]
-        private static HashSet<GameItem> activeCalculations;
-
-        private static void Prefix(GameItem __instance, out bool __state)
+        private static void Postfix(GameItem __instance)
         {
-            __state = false;
-            if (GianThuongPerkMod.GetTradePriceModifierPercent(__instance) == 0)
+            if (__instance == null || !GianThuongPerkMod.IsPerkActive())
                 return;
 
-            if (activeCalculations == null)
-                activeCalculations = new HashSet<GameItem>();
-
-            // Only the outermost calculation for this item receives the modifier.
-            __state = activeCalculations.Add(__instance);
-        }
-
-        private static void Postfix(GameItem __instance, bool __state, ref long __result)
-        {
-            if (!__state)
+            PlayerStore store = PlayerStore.Instance;
+            StoreClient client = store?.currentClientInstance?.GetClientBlueprint();
+            if (client == null)
                 return;
 
-            try
-            {
-                if (__result <= 0)
-                    return;
+            if (!GeneralHelper.IsItemOwned(__instance))
+                return;
 
-                int percent = GianThuongPerkMod.GetTradePriceModifierPercent(__instance);
-                if (percent == 0)
-                    return;
+            if (client.clientIntent != StoreClient.ClientIntent.BUY &&
+                client.clientIntent != StoreClient.ClientIntent.SELLNBUY)
+                return;
 
-                decimal multiplier = 1m + ((decimal)percent / 100m);
-                decimal adjusted = decimal.Round(
-                    (decimal)__result * multiplier,
-                    0,
-                    MidpointRounding.AwayFromZero);
-
-                if (adjusted > long.MaxValue)
-                    __result = long.MaxValue;
-                else if (adjusted < 0m)
-                    __result = 0L;
-                else
-                    __result = (long)adjusted;
-            }
-            catch (Exception ex)
-            {
-                GianThuongPerkMod.LogPricePatchFailure(ex);
-            }
-            finally
-            {
-                activeCalculations?.Remove(__instance);
-            }
-        }
-
-        private static Exception Finalizer(GameItem __instance, bool __state, Exception __exception)
-        {
-            if (__state)
-                activeCalculations?.Remove(__instance);
-            return __exception;
+            GianThuongPerkMod.AddTradeFeature(
+                __instance,
+                5,
+                ItemFeature.FeatureType.TemporarySelling);
+            GianThuongPerkMod.LogFeatureApplied(true);
         }
     }
 
     /// <summary>
-    /// The negotiation UI builds its "Market and Brokers" breakdown from
-    /// ItemFeature entries at ValueStage.Market. Add a presentation-only feature
-    /// with +5% when selling and -5% when buying. The numeric adjustment is
-    /// applied exactly once by GetNegociatedValue above.
+    /// The game itself adds customer-owned items to its client area.
+    /// This is the same point where the game adds ClientTemporary buying
+    /// penalties/discounts. Gian Thuong adds a native -5% Market feature.
     /// </summary>
-    [HarmonyPatch(typeof(NegociationUIManager), "AddFeatureSection")]
-    internal static class GianThuongMarketBreakdownPatch
+    [HarmonyPatch(typeof(GameItem), "OnAddedToClientArea")]
+    internal static class GianThuongCustomerPurchaseFeaturePatch
     {
-        private static void Postfix(
-            GameItem item,
-            ItemFeature.ValueStage stage,
-            string title,
-            List<(string, List<ItemFeature>)> sections)
+        private static void Postfix(GameItem __instance)
         {
-            if (stage != ItemFeature.ValueStage.Market || sections == null)
+            if (__instance == null || !GianThuongPerkMod.IsPerkActive())
                 return;
 
-            int priceModifier = GianThuongPerkMod.GetTradePriceModifierPercent(item);
-            if (priceModifier == 0)
+            PlayerStore store = PlayerStore.Instance;
+            StoreClient client = store?.currentClientInstance?.GetClientBlueprint();
+            if (client == null)
                 return;
 
-            try
-            {
-                // Avoid inserting the same line twice if the UI rebuilds this section.
-                foreach (var section in sections)
-                {
-                    if (section.Item2 == null)
-                        continue;
+            if (GeneralHelper.IsItemOwned(__instance))
+                return;
 
-                    foreach (ItemFeature existing in section.Item2)
-                    {
-                        if (existing != null && existing.identifier == GianThuongPerkMod.BreakdownFeatureId)
-                            return;
-                    }
-                }
+            if (client.clientIntent != StoreClient.ClientIntent.SELL &&
+                client.clientIntent != StoreClient.ClientIntent.SELLNBUY)
+                return;
 
-                ItemFeature feature = new ItemFeature(
-                    priceModifier > 0
-                        ? ItemFeature.FeatureType.TemporarySelling
-                        : ItemFeature.FeatureType.ClientTemporary);
-                feature.identifier = GianThuongPerkMod.BreakdownFeatureId;
-                feature.category = GianThuongPerkMod.BreakdownFeatureId;
-                feature.valueStage = ItemFeature.ValueStage.Market;
-
-                // Use Vietnamese directly: some Vietnamese translation patches change
-                // visible UI text without changing the game's internal locale from English.
-                const string displayName = "Gian Thương";
-                feature.SetPublicDisplay(displayName);
-                feature.SetActualDisplay(displayName);
-                feature.isFeatureMatch = true;
-                feature.isExposable = false;
-                feature.isPublicHidden = false;
-                feature.SetPreExposedValueMod(priceModifier);
-
-                // Add it to the existing Market section, or create that section if
-                // this item has no other market modifiers.
-                for (int i = 0; i < sections.Count; i++)
-                {
-                    if (sections[i].Item1 == title && sections[i].Item2 != null)
-                    {
-                        sections[i].Item2.Add(feature);
-                        return;
-                    }
-                }
-
-                sections.Add((title, new List<ItemFeature> { feature }));
-            }
-            catch (Exception ex)
-            {
-                GianThuongPerkMod.LogPricePatchFailure(ex);
-            }
+            GianThuongPerkMod.AddTradeFeature(
+                __instance,
+                -5,
+                ItemFeature.FeatureType.ClientTemporary);
+            GianThuongPerkMod.LogFeatureApplied(false);
         }
     }
 }
