@@ -1,0 +1,68 @@
+name: Build Gian Thuong Perk
+
+on:
+  push:
+    branches:
+      - feature/gian-thuong-perk
+    paths:
+      - 'GianThuongPerk/**'
+      - '.github/workflows/build-gian-thuong-perk.yml'
+      - 'Managed.zip'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Extract game reference assemblies
+        shell: pwsh
+        run: Expand-Archive -LiteralPath "${{ github.workspace }}\Managed.zip" -DestinationPath "${{ github.workspace }}\references\Managed" -Force
+
+      - name: Build Gian Thuong Perk
+        run: dotnet build GianThuongPerk/GianThuongPerk.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\references\Managed"
+
+      - name: Assemble installable mod
+        shell: pwsh
+        run: |
+          $root = "${{ runner.temp }}\GianThuongPerkPackage"
+          $package = Join-Path $root "GianThuongPerk"
+          New-Item -ItemType Directory -Force -Path (Join-Path $package "Localization") | Out-Null
+          New-Item -ItemType Directory -Force -Path (Join-Path $package "Textures\Items") | Out-Null
+          Copy-Item "GianThuongPerk\manifest.xml" (Join-Path $package "manifest.xml")
+          Copy-Item "GianThuongPerk\bin\Release\netstandard2.1\GianThuongPerk.dll" (Join-Path $package "GianThuongPerk.dll")
+          Copy-Item "GianThuongPerk\Localization\*" (Join-Path $package "Localization")
+          $icon = "GianThuongPerk\Textures\Items\gian_thuong_icon.png"
+          if (!(Test-Path $icon)) { throw "Gian Thuong perk icon is missing from Textures/Items." }
+          Copy-Item $icon (Join-Path $package "Textures\Items\gian_thuong_icon.png")
+          Compress-Archive -Path "$root\*" -DestinationPath "${{ runner.temp }}\GianThuongPerk.zip" -Force
+
+      - name: Verify installable mod package
+        shell: pwsh
+        run: |
+          $zip = "${{ runner.temp }}\GianThuongPerk.zip"
+          $archive = [System.IO.Compression.ZipFile]::OpenRead($zip)
+          $names = $archive.Entries | ForEach-Object FullName
+          $archive.Dispose()
+          if ($names -notcontains "GianThuongPerk/manifest.xml") { throw "Manifest missing from ZIP" }
+          if ($names -notcontains "GianThuongPerk/GianThuongPerk.dll") { throw "DLL missing from ZIP" }
+          if ($names -notcontains "GianThuongPerk/Localization/vi.csv") { throw "Vietnamese localization missing from ZIP" }
+          if ($names -notcontains "GianThuongPerk/Localization/en.csv") { throw "English localization missing from ZIP" }
+          if ($names -notcontains "GianThuongPerk/Textures/Items/gian_thuong_icon.png") { throw "Starting perk icon missing from ZIP" }
+
+      - name: Upload installable mod package
+        uses: actions/upload-artifact@v4
+        with:
+          name: GianThuongPerk
+          path: ${{ runner.temp }}\GianThuongPerk.zip
+          if-no-files-found: error

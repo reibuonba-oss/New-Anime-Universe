@@ -1,0 +1,3 @@
+perk_gian_thuong_name,Price Gouger
+perk_gian_thuong_desc,"A golden perk costing 1 perk point. Add 5% to the displayed price whenever a customer buys your goods; the same adjusted amount is paid to you. Start with 50 extra Credits, but lose 5 reputation with every faction."
+perk_gian_thuong_trade_line,"Price Gouger: +5% sale value (already included in the displayed price)"

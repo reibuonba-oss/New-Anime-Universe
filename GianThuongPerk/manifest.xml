@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manifest>
+  <ID>new_anime_universe.gian_thuong</ID>
+  <Name>Gian Thương</Name>
+  <Author>New Anime Universe</Author>
+  <ModVersion>0.1.0</ModVersion>
+  <Description>A golden starting perk that adds 5% to the displayed price whenever a customer buys the player's goods, grants 50 starting Credits, and lowers every faction's starting reputation by 5. Costs 1 perk point.</Description>
+  <GameVersions>
+    <Version>1.0.0</Version>
+  </GameVersions>
+  <Prerequisites />
+  <Assemblies>
+    <Assembly>GianThuongPerk.dll</Assembly>
+  </Assemblies>
+  <Capabilities />
+</Manifest>
