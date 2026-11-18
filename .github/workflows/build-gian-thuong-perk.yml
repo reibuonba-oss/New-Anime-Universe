@@ -37,7 +37,7 @@ jobs:
           $assembly = "references\\Managed\\Assembly-CSharp.dll"
           $temp = "${{ runner.temp }}\\TradeDecompile"
           New-Item -ItemType Directory -Force -Path $temp | Out-Null
-          $types = @("GeneralHelper", "StoreClient", "StoreClientManager", "NegociationUIManager", "GameItem", "PlayerStore", "StoreClient+ClientIntent")
+          $types = @("GeneralHelper", "StoreClient", "StoreClientManager", "NegociationUIManager", "GameItem", "PlayerStore", "StoreClient+ClientIntent", "StartingPerk", "ModHelper", "ItemFeature", "ItemFeatureList")
           foreach ($type in $types) {
             $path = Join-Path $temp (($type -replace '[^A-Za-z0-9]+','_') + ".cs")
             & ilspycmd -t $type $assembly 2>&1 | Out-File -Encoding utf8 $path
@@ -45,7 +45,7 @@ jobs:
           Write-Host "=== TRADE DIRECTION / OWNERSHIP METHODS ==="
           Get-ChildItem $temp -Filter *.cs | ForEach-Object {
             Write-Host ("--- " + $_.Name + " ---")
-            Select-String -Path $_.FullName -Pattern "IsItemOwned|IsRootedInBackInv|ClientIntent|clientIntent|GetClientBlueprint|currentClientInstance|GetNegociatedValue|AddFeatureSection|clientItems|playerItems|sellItems|buyItems|IsBuying|IsSelling|GetItemsTo" -Context 6,14 | ForEach-Object { Write-Host $_.ToString() }
+            Select-String -Path $_.FullName -Pattern "IsItemOwned|IsRootedInBackInv|ClientIntent|clientIntent|GetClientBlueprint|currentClientInstance|GetCurrentClientIntent|GetNegociatedValue|AddFeatureSection|clientItems|playerItems|sellItems|buyItems|IsBuying|IsSelling|GetItemsTo|IsStartingPerkActive|AddStartingPerk|ActivePerk|StartingPerk|SetPreExposedValueMod|SetPercentage|RetailMarkUp|valueMod|preExposed" -Context 6,14 | ForEach-Object { Write-Host $_.ToString() }
           }
       - name: Build Gian Thuong Perk
         run: dotnet build GianThuongPerk/GianThuongPerk.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\references\Managed"
