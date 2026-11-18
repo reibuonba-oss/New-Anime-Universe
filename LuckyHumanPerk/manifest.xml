@@ -3,8 +3,8 @@
   <ID>new_anime_universe.lucky_human</ID>
   <Name>Con Người May Mắn</Name>
   <Author>New Anime Universe</Author>
-  <ModVersion>0.1.1</ModVersion>
-  <Description>Adds the Con Người May Mắn starting perk: +4 starting perk slots and +15 starting Luck for 2 perk points. Includes a native 32x32 clover perk sprite.</Description>
+  <ModVersion>0.1.2</ModVersion>
+  <Description>Thiên phú Con Người May Mắn mở thêm 4 ô perk khởi đầu và cộng 15 điểm May Mắn khi bắt đầu lượt chơi mới. Tốn 2 điểm perk và có biểu tượng cỏ bốn lá 32×32.</Description>
   <GameVersions>
     <Version>1.0.0</Version>
   </GameVersions>
