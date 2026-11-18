@@ -29,6 +29,24 @@ jobs:
         shell: pwsh
         run: Expand-Archive -LiteralPath "${{ github.workspace }}\Managed.zip" -DestinationPath "${{ github.workspace }}\references\Managed" -Force
 
+      - name: Inspect native negotiation pricing UI and item feature APIs
+        shell: pwsh
+        run: |
+          dotnet tool install --global ilspycmd --version 9.1.0.7988
+          $env:PATH += ";$env:USERPROFILE\\.dotnet\\tools"
+          $assembly = "references\\Managed\\Assembly-CSharp.dll"
+          $temp = "${{ runner.temp }}\\GianThuongDecompile"
+          New-Item -ItemType Directory -Force -Path $temp | Out-Null
+          $types = @("GameItem", "ItemFeature", "ItemFeatureList", "ItemFeatureUI", "NegotiationTablet", "NegociationUIManager", "PlayerStore")
+          foreach ($type in $types) {
+            $path = Join-Path $temp "$type.cs"
+            & ilspycmd -t $type $assembly 2>&1 | Out-File -Encoding utf8 $path
+          }
+          Write-Host "=== Method/field excerpts ==="
+          Get-ChildItem $temp -Filter *.cs | ForEach-Object {
+            Write-Host ("--- " + $_.Name + " ---")
+            Select-String -Path $_.FullName -Pattern "GetCurrentValue|GetNegociatedValue|SumNegociatedValue|retailMarkup|RetailMarkUp|itemFeatures|valueModifier|GetFeature|AddFeature|priceBreak|Breakdown|FeatureUI|AddLine|Negotiated" -Context 3,8 | ForEach-Object { Write-Host $_.ToString() }
+          }
       - name: Build Gian Thuong Perk
         run: dotnet build GianThuongPerk/GianThuongPerk.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\references\Managed"
 
