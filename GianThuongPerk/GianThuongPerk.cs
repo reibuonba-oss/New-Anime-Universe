@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HarmonyLib;
 
 namespace NewAnimeUniverse.GianThuongPerk
@@ -8,9 +9,11 @@ namespace NewAnimeUniverse.GianThuongPerk
         public const string ModId = "new_anime_universe.gian_thuong";
         public const string PerkId = "new_anime_universe.gian_thuong.perk";
 
+        internal const string BreakdownFeatureId = "new_anime_universe_gian_thuong_markup";
         private const int StartingCredits = 50;
         private const double StartingFactionReputationPenalty = 5d;
         private const int PerkPointCost = 1;
+        private const decimal SaleBonusRate = 0.05m;
 
         private static ModLog sharedLog;
         private static bool warnedPricePatch;
@@ -38,27 +41,25 @@ namespace NewAnimeUniverse.GianThuongPerk
                 iconKey: ModId + ":gian_thuong_icon");
 
             ModHook.OnNewGameStarted += ApplyStartingEffects;
-            ModHook.OnCreateTooltipLate += AddSalePriceTooltip;
 
             try
             {
                 harmony = new Harmony(ModId);
                 harmony.PatchAll();
-                log.Log("Patched GameItem.GetNegociatedValue so the +5% appears in the negotiation list and is paid on settlement.");
+                log.Log("Installed Gian Thuong price and Market-breakdown patches.");
             }
             catch (Exception ex)
             {
-                log.Error("Could not install the Gian Thương sale-price patch: " + ex);
+                log.Error("Could not install the Gian Thuong trade patches: " + ex);
                 harmony = null;
             }
 
-            log.Log("Registered Gian Thương: +5% on customer purchases, +50 starting Credits, -5 reputation with every faction; costs 1 perk point.");
+            log.Log("Registered Gian Thuong: +5% to the displayed sale price, +50 starting Credits, -5 reputation with every faction; costs 1 perk point.");
         }
 
         public void OnDisable()
         {
             ModHook.OnNewGameStarted -= ApplyStartingEffects;
-            ModHook.OnCreateTooltipLate -= AddSalePriceTooltip;
             ModHelper.RemoveStartingPerks(ModId);
 
             try
@@ -68,18 +69,31 @@ namespace NewAnimeUniverse.GianThuongPerk
             }
             catch (Exception ex)
             {
-                log?.Warning("Could not remove Gian Thương Harmony patches: " + ex.Message);
+                log?.Warning("Could not remove Gian Thuong Harmony patches: " + ex.Message);
             }
 
             if (ReferenceEquals(sharedLog, log))
                 sharedLog = null;
 
-            log?.Log("Unregistered Gian Thương.");
+            log?.Log("Unregistered Gian Thuong.");
         }
 
         internal static bool IsPerkActive()
         {
             return ModHelper.IsStartingPerkActive(PerkId);
+        }
+
+        internal static bool IsPlayerSellingToCustomer(GameItem item)
+        {
+            if (item == null || !IsPerkActive())
+                return false;
+
+            PlayerStore store = PlayerStore.Instance;
+            if (store == null || store.currentClientInstance == null)
+                return false;
+
+            // Only player-owned stock sold to the current customer receives the bonus.
+            return GeneralHelper.IsItemOwned(item);
         }
 
         internal static void LogPricePatchFailure(Exception ex)
@@ -88,7 +102,7 @@ namespace NewAnimeUniverse.GianThuongPerk
                 return;
 
             warnedPricePatch = true;
-            sharedLog?.Warning("Gian Thương could not apply its sale-price bonus: " + ex.Message);
+            sharedLog?.Warning("Gian Thuong could not apply its sale-price bonus: " + ex.Message);
         }
 
         private void ApplyStartingEffects(string scenarioId)
@@ -96,15 +110,15 @@ namespace NewAnimeUniverse.GianThuongPerk
             if (!IsPerkActive())
                 return;
 
-            // Mod data is per-run. The guard prevents accidental duplicate grants if
-            // another mod or a future game update fires the new-game hook more than once.
+            // Mod data is per-run. The guard prevents duplicate grants if a new-game hook
+            // is accidentally fired more than once by another mod or a future game update.
             if (ModHelper.GetModDataBool(ModId, "starting_effects_applied"))
                 return;
 
             PlayerStore store = PlayerStore.Instance;
             if (store == null)
             {
-                log?.Warning("Gian Thương was selected, but PlayerStore was unavailable; starting effects were not applied.");
+                log?.Warning("Gian Thuong was selected, but PlayerStore was unavailable; starting effects were not applied.");
                 return;
             }
 
@@ -125,44 +139,16 @@ namespace NewAnimeUniverse.GianThuongPerk
 
             ModHelper.SetModDataBool(ModId, "starting_effects_applied", true);
             log?.Log(
-                "Applied Gian Thương starting effects: +" + StartingCredits +
+                "Applied Gian Thuong starting effects: +" + StartingCredits +
                 " Credits and -" + StartingFactionReputationPenalty +
                 " reputation with " + factionsAdjusted + " factions.");
-        }
-
-        private void AddSalePriceTooltip(RichTextBuilder builder, GameItem item)
-        {
-            if (builder == null || item == null || !IsPerkActive())
-                return;
-
-            try
-            {
-                PlayerStore store = PlayerStore.Instance;
-                if (store == null || store.currentClientInstance == null)
-                    return;
-
-                // Only the player's goods are being sold to the current customer.
-                // Items offered by a customer are not eligible for the +5% bonus.
-                if (!GeneralHelper.IsItemOwned(item))
-                    return;
-
-                string line = ModHelper.GetLocalized(ModId, "perk_gian_thuong_trade_line", null);
-                if (string.IsNullOrEmpty(line) || line == "perk_gian_thuong_trade_line")
-                    line = "Gian Thương: +5% giá bán (đã tính vào giá hiển thị)";
-
-                builder.AddLine(line, true, RenderHandler.ColorPalette.LightCyan);
-            }
-            catch (Exception ex)
-            {
-                log?.Warning("Could not add the Gian Thương trade tooltip: " + ex.Message);
-            }
         }
     }
 
     /// <summary>
-    /// The negotiation list and the cash settlement both call
-    /// GameItem.GetNegociatedValue(). Changing the shared result keeps
-    /// the quoted price and the Credits actually received in sync.
+    /// The negotiation list, total, affordability check, and settlement all use
+    /// GameItem.GetNegociatedValue(). Adjusting this shared result updates the
+    /// displayed item price and the amount paid, without changing customer-to-player buys.
     /// </summary>
     [HarmonyPatch(typeof(GameItem), "GetNegociatedValue")]
     [HarmonyPriority(Priority.Last)]
@@ -172,16 +158,7 @@ namespace NewAnimeUniverse.GianThuongPerk
         {
             try
             {
-                if (__instance == null || __result <= 0 || !GianThuongPerkMod.IsPerkActive())
-                    return;
-
-                PlayerStore store = PlayerStore.Instance;
-                if (store == null || store.currentClientInstance == null)
-                    return;
-
-                // Only add the bonus when a customer buys an item owned by the player.
-                // Purchases made by the player from a customer remain unchanged.
-                if (!GeneralHelper.IsItemOwned(__instance))
+                if (__result <= 0 || !GianThuongPerkMod.IsPlayerSellingToCustomer(__instance))
                     return;
 
                 decimal bonus = decimal.Round(
@@ -194,6 +171,80 @@ namespace NewAnimeUniverse.GianThuongPerk
 
                 decimal adjusted = (decimal)__result + bonus;
                 __result = adjusted >= long.MaxValue ? long.MaxValue : (long)adjusted;
+            }
+            catch (Exception ex)
+            {
+                GianThuongPerkMod.LogPricePatchFailure(ex);
+            }
+        }
+    }
+
+    /// <summary>
+    /// The negotiation UI builds its "Market and Brokers" breakdown from
+    /// ItemFeature entries at ValueStage.Market. Add a presentation-only feature
+    /// there so the 5% line appears next to the increased value.
+    /// The numeric increase itself is applied once by GetNegociatedValue above.
+    /// </summary>
+    [HarmonyPatch(typeof(NegociationUIManager), "AddFeatureSection")]
+    internal static class GianThuongMarketBreakdownPatch
+    {
+        private static void Postfix(
+            GameItem item,
+            ItemFeature.ValueStage stage,
+            string title,
+            List<(string, List<ItemFeature>)> sections)
+        {
+            if (stage != ItemFeature.ValueStage.Market ||
+                sections == null ||
+                !GianThuongPerkMod.IsPlayerSellingToCustomer(item))
+                return;
+
+            try
+            {
+                // Avoid inserting the same line twice if the UI rebuilds this section.
+                foreach (var section in sections)
+                {
+                    if (section.Item2 == null)
+                        continue;
+
+                    foreach (ItemFeature existing in section.Item2)
+                    {
+                        if (existing != null && existing.identifier == GianThuongPerkMod.BreakdownFeatureId)
+                            return;
+                    }
+                }
+
+                ItemFeature feature = new ItemFeature(ItemFeature.FeatureType.TemporarySelling);
+                feature.identifier = GianThuongPerkMod.BreakdownFeatureId;
+                feature.category = GianThuongPerkMod.BreakdownFeatureId;
+                feature.valueStage = ItemFeature.ValueStage.Market;
+
+                string displayName = ModHelper.GetLocalized(
+                    GianThuongPerkMod.ModId,
+                    "perk_gian_thuong_market_feature",
+                    null);
+                if (string.IsNullOrEmpty(displayName) || displayName == "perk_gian_thuong_market_feature")
+                    displayName = "Gian Thương";
+
+                feature.SetPublicDisplay(displayName);
+                feature.SetActualDisplay(displayName);
+                feature.isFeatureMatch = true;
+                feature.isExposable = false;
+                feature.isPublicHidden = false;
+                feature.SetPreExposedValueMod(5);
+
+                // Add it to the existing Market section, or create that section if
+                // this item has no other market modifiers.
+                for (int i = 0; i < sections.Count; i++)
+                {
+                    if (sections[i].Item1 == title && sections[i].Item2 != null)
+                    {
+                        sections[i].Item2.Add(feature);
+                        return;
+                    }
+                }
+
+                sections.Add((title, new List<ItemFeature> { feature }));
             }
             catch (Exception ex)
             {
