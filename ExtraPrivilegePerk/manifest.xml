@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manifest>
+  <ID>new_anime_universe.extra_privilege</ID>
+  <Name>Thêm Tí Đặc Quyền</Name>
+  <Author>New Anime Universe</Author>
+  <ModVersion>0.1.0</ModVersion>
+  <Description>Adds a neutral, golden-tinted starting perk: +4 starting perk slots and a one-time 100-Credit deduction when a new run begins.</Description>
+  <GameVersions>
+    <Version>1.0.0</Version>
+  </GameVersions>
+  <Prerequisites />
+  <Assemblies>
+    <Assembly>ExtraPrivilegePerk.dll</Assembly>
+  </Assemblies>
+  <Capabilities />
+</Manifest>
