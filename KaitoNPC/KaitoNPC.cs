@@ -253,13 +253,13 @@ namespace NewAnimeUniverse.KaitoNPC
 
             kaito.mainDialogue = new Dialogue();
             kaito.mainDialogue
-                .SetText("Kaito", Text("kaito.greeting", "Hello. I'm Kaito. I collect useful technology and well-made rare goods."))
+                .SetText("Kaito", Text("kaito.greeting", "Xin chào. Tôi là Kaito. Tôi sưu tầm công nghệ hữu dụng và những món hàng hiếm được chế tác tốt."))
                 .NextDialogue()
-                .SetText("Kaito", Text("kaito.buy", "I'm buying selected weapons, modules, energy cells and luxury goods. I only carry what I can properly inspect."))
+                .SetText("Kaito", Text("kaito.buy", "Tôi đang thu mua một số loại vũ khí, module, pin năng lượng và hàng xa xỉ. Tôi chỉ nhận những món có thể kiểm tra cẩn thận."))
                 .NextDialogue()
-                .SetText("Kaito", Text("kaito.stock", "Today I brought advanced water filters, energy cells and a small selection of modules. Practical things, chosen carefully."))
+                .SetText("Kaito", Text("kaito.stock", "Hôm nay tôi có bộ lọc nước cao cấp, pin năng lượng và một ít module được tuyển chọn. Toàn những món thực tế và hữu dụng."))
                 .NextDialogue()
-                .SetText("Kaito", Text("kaito.farewell", "Good equipment lasts. Take care of it, and it will take care of you."))
+                .SetText("Kaito", Text("kaito.farewell", "Thiết bị tốt sẽ dùng được lâu. Hãy giữ gìn chúng, rồi chúng sẽ không làm anh thất vọng."))
                 .SetEndAction(PlaceKaitoStock);
 
             kaito.AddBasicDialog();
@@ -316,10 +316,7 @@ namespace NewAnimeUniverse.KaitoNPC
 
         private static string Text(string key, string fallback)
         {
-            string value = ModHelper.GetLocalized(ModId, key, null);
-            if (string.IsNullOrEmpty(value) || value == key)
-                return fallback;
-            return value;
+            return fallback;
         }
     }
 }
