@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Manifest>
   <ID>new_anime_universe.advanced_charger</ID>
-  <Name>Anime Universe — Advanced Battery Charger</Name>
+  <Name>Vũ Trụ Anime — Trạm Sạc Pin Nâng Cao</Name>
   <Author>New Anime Universe</Author>
-  <ModVersion>0.1.1</ModVersion>
-  <Description>An advanced battery charging station that charges power cells at twice the vanilla Recharger rate: 6 kJ per night, or 12 kJ with Commercial Power. Uses the game's native battery and power restrictions. Not granted for free; purchase from Kaito.</Description>
+  <ModVersion>0.1.2</ModVersion>
+  <Description>Trạm sạc pin nâng cao, nạp pin nhanh gấp đôi máy Sạc Pin tiêu chuẩn: 6 kJ mỗi đêm hoặc 12 kJ khi mở khóa Điện Thương Mại. Sử dụng các giới hạn pin và nguồn điện gốc của game. Không được tặng miễn phí; có thể mua từ Kaito.</Description>
   <GameVersions>
     <Version>1.0.0</Version>
   </GameVersions>
