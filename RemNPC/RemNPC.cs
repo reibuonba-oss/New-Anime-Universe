@@ -227,11 +227,11 @@ namespace NewAnimeUniverse.RemNPC
 
             rem.mainDialogue = new Dialogue();
             rem.mainDialogue
-                .SetText("Rem", Text("rem.greeting", "Hello. I'm Rem. I brought a few carefully selected luxury goods today."))
+                .SetText("Rem", Text("rem.greeting", "Xin chào. Em là Rem. Hôm nay em mang đến vài món hàng xa xỉ được tuyển chọn cẩn thận."))
                 .NextDialogue()
-                .SetText("Rem", Text("rem.offer", "Please take your time looking. Everything here was chosen with care."))
+                .SetText("Rem", Text("rem.offer", "Anh cứ thong thả xem hàng nhé. Mỗi món đều được Rem lựa chọn rất kỹ."))
                 .NextDialogue()
-                .SetText("Rem", Text("rem.buy_food_water", "I also buy fresh food and clean water. If you have some to spare, Rem would be happy to take them."))
+                .SetText("Rem", Text("rem.buy_food_water", "Rem cũng thu mua thực phẩm và nước sạch. Nếu anh có hàng dư, em rất sẵn lòng mua lại ạ."))
                 .SetEndAction(PlaceLuxuryGoods);
 
             rem.AddBasicDialog();
@@ -269,10 +269,7 @@ namespace NewAnimeUniverse.RemNPC
 
         private static string Text(string key, string fallback)
         {
-            string value = ModHelper.GetLocalized(ModId, key, null);
-            if (string.IsNullOrEmpty(value) || value == key)
-                return fallback;
-            return value;
+            return fallback;
         }
     }
 }
