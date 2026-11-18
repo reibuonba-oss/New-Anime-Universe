@@ -1,36 +1,34 @@
-# Kaito — The Collector
+# Kaito — Nhà Sưu Tầm
 
-A conservative, standalone Probably Stolen NPC mod built around vanilla game systems.
+Mod NPC độc lập cho Probably Stolen, sử dụng các hệ thống và vật phẩm gốc của game.
 
-## Design
+## Hoạt động
 
-- **Appearance:** one 8% roll per in-game day. Kaito can visit at most once per day.
-- **Buys:** a curated list of vanilla weapons, plus items tagged `MODULE`, `ENERGY_CELL`, and `LUXURY_ITEM`.
-- **Budget:** 4,800 credits plus 25 credits per in-game day.
-- **Sells:** Advanced Water Filter, HydraTech Micro Water Purifier, Energy Cell Mk. II, Self Charging Energy Cell, and two different vanilla modules per visit.
-- **Dialogue:** original Kaito dialogue in Vietnamese and English.
-- **Portrait:** the supplied 242 × 300 transparent PNG.
+- **Tỷ lệ xuất hiện:** mỗi ngày trong game có một lần tung xác suất 8%. Kaito xuất hiện tối đa một lần mỗi ngày.
+- **Thu mua:** một danh sách vũ khí gốc được chọn lọc, cùng vật phẩm mang thẻ MODULE, ENERGY_CELL và LUXURY_ITEM.
+- **Ngân sách:** 4.800 Credits cộng thêm 25 Credits cho mỗi ngày trong game.
+- **Bày bán:** Bộ Lọc Nước Cao Cấp, Máy Lọc Nước HydraTech, Pin Năng Lượng Mk. II, Pin Tự Sạc và hai module gốc khác nhau trong mỗi lần ghé thăm.
+- **Hội thoại:** lời thoại riêng của Kaito bằng tiếng Việt.
+- **Chân dung:** sử dụng ảnh PNG nền trong suốt kích thước 242 × 300.
 
-## Low-risk implementation choices
+## Lựa chọn triển khai an toàn
 
-- No custom item definitions or item directory hooks.
-- No Harmony patches, reflection, filesystem access, or external capabilities.
-- Uses the native `IMod` lifecycle, the customer-generation hook, and vanilla item IDs.
-- Missing stock items are skipped with a warning rather than causing the customer generation to fail.
-- The daily roll state is stored through the mod's per-run ModData.
+- Không tạo định nghĩa vật phẩm tùy chỉnh và không can thiệp vào thư mục vật phẩm.
+- Không dùng Harmony, reflection, truy cập hệ thống tệp hoặc quyền bổ sung.
+- Sử dụng vòng đời IMod gốc, sự kiện tạo khách và ID vật phẩm gốc.
+- Nếu vật phẩm trong danh mục không có sẵn, mod bỏ qua vật phẩm đó và ghi cảnh báo thay vì làm hỏng quá trình tạo khách.
+- Trạng thái xác suất xuất hiện hằng ngày được lưu bằng ModData riêng của lượt chơi.
 
-## Build
+## Biên dịch
 
-Extract the repository's `Managed.zip` into `references/Managed/`, then run:
+Giải nén Managed.zip của repository vào references/Managed/, sau đó chạy:
 
-```powershell
-dotnet build KaitoNPC/KaitoNPC.csproj -c Release -p:ManagedDir="C:\Path\To\references\Managed"
-```
+    dotnet build KaitoNPC/KaitoNPC.csproj -c Release -p:ManagedDir="C:\Path\To\references\Managed"
 
-The workflow `.github/workflows/build-kaitonpc.yml` creates an installable ZIP.
+Workflow .github/workflows/build-kaitonpc.yml sẽ tạo ZIP cài đặt.
 
-## Install
+## Cài đặt
 
-Extract the ZIP into the game's `Mods/` directory, enable Kaito in the Mods menu, and restart the game.
+Giải nén ZIP vào thư mục Mods/ của game, bật Kaito trong menu Mods và khởi động lại game.
 
-This is a compiled mod, but an in-game test is still needed to verify actual customer generation, trade acceptance and stock placement on the user's game build.
+Đây là mod đã được biên dịch, nhưng vẫn cần kiểm tra trong game để xác nhận khách xuất hiện, giao dịch được chấp nhận và hàng hóa được bày đúng trên phiên bản game đang dùng.
