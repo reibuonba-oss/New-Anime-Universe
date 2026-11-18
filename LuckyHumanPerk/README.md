@@ -1,27 +1,27 @@
-# Con Người May Mắn — Starting Perk
+# Con Người May Mắn — Thiên phú khởi đầu
 
-A standalone starting-perk mod for Probably Stolen.
+Mod độc lập bổ sung thiên phú khởi đầu cho Probably Stolen.
 
-## Perk effects
+## Hiệu ứng
 
-- **Name:** Con Người May Mắn
-- **Cost:** 2 perk points
-- **Extra slots:** +4 starting-perk slots while this perk is selected
-- **Starting Luck:** +15 when a new run begins
-- **Icon:** a white 32×32 four-leaf clover glyph in `Textures/Items/lucky_human_icon.png`; the game tints it green for this positive perk
+- **Tên:** Con Người May Mắn
+- **Chi phí:** 2 điểm perk
+- **Ô perk:** mở thêm 4 ô perk khởi đầu khi chọn thiên phú này
+- **May Mắn khởi đầu:** +15 điểm khi bắt đầu lượt chơi mới
+- **Biểu tượng:** hình cỏ bốn lá màu trắng, kích thước 32×32, tại `Textures/Items/lucky_human_icon.png`; game tự tô màu xanh vì đây là thiên phú tích cực
 
-The perk is registered through the game's native `ModHelper.AddStartingPerk` API with `iconKey: "new_anime_universe.lucky_human:lucky_human_icon"`. Its Luck bonus is applied to `PlayerStore.Instance.healthData.luck` from `ModHook.OnNewGameStarted`, so the value is stored with the run. The bonus is not re-applied when loading a save.
+Thiên phú dùng API gốc `ModHelper.AddStartingPerk` với `iconKey: "new_anime_universe.lucky_human:lucky_human_icon"`. Điểm May Mắn được cộng vào `PlayerStore.Instance.healthData.luck` trong sự kiện `ModHook.OnNewGameStarted`, vì vậy giá trị được lưu cùng lượt chơi. Khi tải bản lưu, mod không cộng lại điểm May Mắn.
 
-Perk icons must be item sprites in `Textures/Items/`. The build workflow verifies that the icon is included in the installable ZIP.
+Biểu tượng perk phải nằm trong `Textures/Items/`. Quy trình build kiểm tra ảnh được đóng gói vào ZIP cài đặt.
 
-## Build
+## Biên dịch
 
-Extract the repository's Managed.zip into references/Managed/, then run:
+Giải nén `Managed.zip` vào `references/Managed/`, sau đó chạy:
 
     dotnet build LuckyHumanPerk/LuckyHumanPerk.csproj -c Release -p:ManagedDir="C:\Path\To\references\Managed"
 
-The GitHub Actions workflow creates an installable ZIP.
+GitHub Actions sẽ tạo ZIP cài đặt.
 
-## Test notes
+## Kiểm tra
 
-CI verifies compilation and ZIP packaging against the game's reference assemblies. In-game testing is still required to confirm the clover icon appears at the intended size, the perk unlocks four additional slots, and a new run starts with +15 Luck.
+CI xác nhận biên dịch và đóng gói ZIP. Vẫn cần kiểm tra trong game để xác nhận biểu tượng cỏ bốn lá hiển thị đúng, thiên phú mở thêm 4 ô và lượt chơi mới bắt đầu với +15 điểm May Mắn.
