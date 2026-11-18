@@ -7,8 +7,6 @@ namespace NewAnimeUniverse.AdvancedCharger
         public const string ModId = "new_anime_universe.advanced_charger";
         public const string ItemId = "nau_advanced_charger";
 
-        // Vanilla Recharger: 3 kJ per night, or 6 kJ with Commercial Power.
-        // This machine doubles those values without bypassing the game's power checks.
         private const int VanillaChargeRate = 3;
         private const int AdvancedChargeRate = VanillaChargeRate * 2;
         private const int AdvancedCommercialChargeRate = VanillaChargeRate * 4;
@@ -21,7 +19,7 @@ namespace NewAnimeUniverse.AdvancedCharger
         {
             log = new ModLog(manifest);
             sharedLog = log;
-            log.Log("Advanced Battery Charger initialized.");
+            log.Log("Trạm Sạc Pin Nâng Cao đã khởi tạo.");
         }
 
         public void OnEnable()
@@ -32,7 +30,7 @@ namespace NewAnimeUniverse.AdvancedCharger
             ModHelper.AddDebugFunction(
                 ModId,
                 ModHelper.DEBUG_CATEGORY_SPAWN,
-                "Spawn Advanced Charger",
+                "Tạo Trạm Sạc Pin Nâng Cao",
                 SpawnChargerForDebug);
         }
 
@@ -51,12 +49,11 @@ namespace NewAnimeUniverse.AdvancedCharger
             if (directory == null) return;
 
             directory.Add(ItemId, CreateAdvancedCharger);
-            log.Log("Registered Advanced Battery Charger.");
+            log.Log("Đã đăng ký Trạm Sạc Pin Nâng Cao.");
         }
 
         private static GameItem CreateAdvancedCharger()
         {
-            // Reuse the vanilla Recharger's own panel and battery-grid layout.
             var inventoryWindow = MachineRecharger.CreateMachineInventoryWindow(true, true);
             GameInventory batteries = inventoryWindow.Item2;
 
@@ -89,11 +86,11 @@ namespace NewAnimeUniverse.AdvancedCharger
                 }
                 catch (Exception ex)
                 {
-                    sharedLog?.Error("Advanced Charger cycle failed: " + ex);
+                    sharedLog?.Error("Chu kỳ của Trạm Sạc Pin Nâng Cao gặp lỗi: " + ex);
                 }
             };
 
-            ModHelper.SetSource(machine, ModId, "Anime Universe — Advanced Battery Charger");
+            ModHelper.SetSource(machine, ModId, "Vũ Trụ Anime — Trạm Sạc Pin Nâng Cao");
             return machine;
         }
 
@@ -103,7 +100,6 @@ namespace NewAnimeUniverse.AdvancedCharger
         {
             if (machine == null || batteryInventory == null) return;
 
-            // Match vanilla Recharger behavior: the station only operates while grid power is on.
             PlayerStore store = PlayerStore.Instance;
             if (store == null || !store.isPowerOn) return;
 
@@ -118,15 +114,14 @@ namespace NewAnimeUniverse.AdvancedCharger
                 if (battery == null || !battery.IsTag(PowerHelper.POWER_SOURCE_ITEM_TAG))
                     continue;
 
-                // PowerHelper enforces max capacity and vanilla blackout/battery restrictions.
                 PowerHelper.ChargeBattery(battery, chargeAmount, false);
                 chargedCount++;
             }
 
             machine.Validate();
             sharedLog?.Log(
-                "Advanced Charger applied " + chargeAmount +
-                " kJ to " + chargedCount + " inserted battery item(s).");
+                "Trạm sạc đã nạp " + chargeAmount +
+                " kJ cho " + chargedCount + " viên pin.");
         }
 
         private void SpawnChargerForDebug()
@@ -139,7 +134,7 @@ namespace NewAnimeUniverse.AdvancedCharger
             }
             catch (Exception ex)
             {
-                log.Error("Could not spawn an Advanced Charger: " + ex);
+                log.Error("Không thể tạo Trạm Sạc Pin Nâng Cao: " + ex);
             }
         }
 
@@ -160,14 +155,21 @@ namespace NewAnimeUniverse.AdvancedCharger
             }
             catch (Exception ex)
             {
-                log.Warning("Could not build Advanced Charger tooltip: " + ex.Message);
+                log.Warning("Không thể tạo mô tả Trạm Sạc Pin Nâng Cao: " + ex.Message);
             }
         }
 
         private static string Text(string key)
         {
-            string value = ModHelper.GetLocalized(ModId, key, null);
-            return string.IsNullOrEmpty(value) || value == key ? key : value;
+            switch (key)
+            {
+                case "advanced_charger.name": return "Trạm Sạc Pin Nâng Cao";
+                case "advanced_charger.description": return "Sạc pin năng lượng được lắp vào nhanh gấp đôi máy Sạc Pin tiêu chuẩn. Cần có điện lưới.";
+                case "advanced_charger.flavor": return "Trạm sạc gia cố công suất cao, được thiết kế để nạp pin nhanh hơn.";
+                case "advanced_charger.tooltip.rate": return "Tốc độ sạc: gấp 2 lần máy Sạc Pin tiêu chuẩn.";
+                case "advanced_charger.tooltip.power": return "6 kJ mỗi đêm; 12 kJ khi đã mở khóa Điện Thương Mại.";
+                default: return "Chưa có bản dịch: " + key;
+            }
         }
     }
 }
