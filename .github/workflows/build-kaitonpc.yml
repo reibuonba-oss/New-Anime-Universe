@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/kaito-collector
+      - feature/advanced-battery-charger
     paths:
       - 'KaitoNPC/**'
       - '.github/workflows/build-kaitonpc.yml'
