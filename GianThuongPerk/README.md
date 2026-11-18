@@ -1,32 +1,33 @@
-# Gian Thương — Starting Perk
+# Gian Thương — Perk khởi đầu
 
-A standalone golden starting perk for Probably Stolen.
+Mod độc lập cho Probably Stolen.
 
-## Effects
+## Hiệu ứng
 
-- **Perk name:** Gian Thương (Price Gouger)
-- **Type / cost:** Neutral (amber/gold tint), costs 1 starting perk point
-- **Sale bonus:** +5% to the final negotiated value whenever a customer buys an item owned by the player
-- **Displayed sale price:** the price at the right side of the negotiation item row includes the +5%
-- **Price breakdown:** the expanded row adds a native Market-stage entry, **Gian Thương (+5%)**, alongside other market modifiers such as retail markup
-- **Actual payment:** the native negotiation settlement uses the same `GameItem.GetNegociatedValue()` calculation, so the adjusted displayed value is the amount paid
-- **Starting cash:** +50 Credits
-- **Faction reputation:** -5 reputation with every faction present in the new run's reputation list
+- **Tên:** Gian Thương
+- **Loại / chi phí:** Perk Vàng (NEUTRAL), tốn 1 điểm perk
+- **Giá bán:** tăng 5% khi khách mua món hàng thuộc về người chơi
+- **Giá hiển thị:** giá ở bên phải từng món đã bao gồm phần tăng 5%
+- **Phân tích giá:** thêm dòng **Gian Thương (+5%)** trong mục **Thị Trường và Nhà Buôn**
+- **Tiền nhận:** dùng cùng hàm tính giá với danh sách thương lượng nên số tiền thanh toán khớp giá đang hiển thị
+- **Tiền khởi đầu:** +50 Credits
+- **Hảo cảm:** -5 với từng phe có trong danh sách quan hệ của lượt chơi mới
 
-The game renders negotiation price details from `ItemFeature` entries grouped by `ValueStage`. A Harmony postfix on the native `NegociationUIManager.AddFeatureSection` adds a presentation-only Market feature for player-owned items being sold to a customer. Separately, a Harmony postfix on `GameItem.GetNegociatedValue()` applies the numeric 5% increase. This is the same method used by the negotiation item-row price, the total, affordability checks, and settlement. Buying goods from customers is unchanged.
+## Ngôn ngữ
 
-The displayed Market entry is not attached to the saved item; it is inserted into the UI's temporary breakdown list. The numeric bonus is applied once per negotiated item value and rounded to a whole Credit, midpoint away from zero.
+Tên, mô tả và dòng phân tích giá được đặt trực tiếp bằng tiếng Việt. Một số bản Việt hóa chỉ thay chữ giao diện hiển thị mà không đổi locale nội bộ của game khỏi English; vì vậy chỉ cung cấp `vi.csv` có thể vẫn khiến mod loader chọn `en.csv`. Bản này không phụ thuộc vào việc tự nhận diện locale cho các dòng chữ chính của perk.
 
-Starting Credits and reputation are granted once from `ModHook.OnNewGameStarted`, only when this perk is selected. A per-run mod-data guard prevents duplicate application. Loading an existing save does not grant the starting effects again.
+## Kỹ thuật
+
+- Harmony postfix trên `GameItem.GetNegociatedValue()` cộng 5% vào giá giao dịch. Đây là hàm dùng cho giá từng món, tổng tiền, kiểm tra khả năng thanh toán và thanh toán.
+- Harmony postfix trên `NegociationUIManager.AddFeatureSection` thêm một `ItemFeature` tạm thời ở `ValueStage.Market`, để phần phân tích giá hiện dòng **Gian Thương (+5%)**.
+- Dòng phân tích chỉ là phần hiển thị, không tự cộng tiền lần hai.
+- Chỉ áp dụng khi khách mua hàng của người chơi; mua hàng từ khách không được cộng.
 
 ## Build
 
-Extract the repository's `Managed.zip` into `references/Managed/`, then run:
+Giải nén `Managed.zip` vào `references/Managed/`, sau đó chạy:
 
     dotnet build GianThuongPerk/GianThuongPerk.csproj -c Release -p:ManagedDir="C:\\Path\\To\\references\\Managed"
 
-The project references the game's `Assembly-CSharp.dll` and `0Harmony.dll`. The GitHub Actions workflow builds and verifies an installable ZIP.
-
-## Verification notes
-
-CI verifies compilation and ZIP contents. The numeric price and breakdown hooks are based on the game assembly's decompiled negotiation flow, but a live in-game test is still required to verify the exact rendered line and paid amount in a running save.
+CI build và xác minh ZIP cài đặt. Vẫn cần kiểm thử trực tiếp trong game để xác nhận giao diện thực tế và số tiền thanh toán.

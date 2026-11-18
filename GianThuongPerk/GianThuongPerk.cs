@@ -36,8 +36,8 @@ namespace NewAnimeUniverse.GianThuongPerk
                 // Keep the native amber/gold Neutral appearance while charging one perk point.
                 cost: PerkPointCost,
                 type: StartingPerk.StartingPerkType.NEUTRAL,
-                name: () => ModHelper.GetLocalized(ModId, "perk_gian_thuong_name"),
-                description: () => ModHelper.GetLocalized(ModId, "perk_gian_thuong_desc"),
+                name: () => "Gian Thương",
+                description: () => "Perk Vàng, tốn 1 điểm perk. Khi khách mua hàng của bạn, tăng 5% vào giá bán và hiển thị rõ trong phần phân tích giá. Khởi đầu thêm 50 Credits, nhưng giảm 5 điểm hảo cảm với tất cả các phe.",
                 iconKey: ModId + ":gian_thuong_icon");
 
             ModHook.OnNewGameStarted += ApplyStartingEffects;
@@ -219,12 +219,9 @@ namespace NewAnimeUniverse.GianThuongPerk
                 feature.category = GianThuongPerkMod.BreakdownFeatureId;
                 feature.valueStage = ItemFeature.ValueStage.Market;
 
-                string displayName = ModHelper.GetLocalized(
-                    GianThuongPerkMod.ModId,
-                    "perk_gian_thuong_market_feature",
-                    null);
-                if (string.IsNullOrEmpty(displayName) || displayName == "perk_gian_thuong_market_feature")
-                    displayName = "Gian Thương";
+                // Use Vietnamese directly: some Vietnamese translation patches change
+                // the visible UI without changing the game's internal locale from English.
+                string displayName = "Gian Thương";
 
                 feature.SetPublicDisplay(displayName);
                 feature.SetActualDisplay(displayName);
