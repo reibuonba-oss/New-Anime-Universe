@@ -27,30 +27,30 @@ jobs:
 
       - name: Extract game reference assemblies
         shell: pwsh
-        run: Expand-Archive -Path "${{ github.workspace }}\\Managed.zip" -DestinationPath "${{ github.workspace }}\\references\\Managed" -Force
+        run: Expand-Archive -Path "${{ github.workspace }}\Managed.zip" -DestinationPath "${{ github.workspace }}\references\Managed" -Force
 
       - name: Build Lucky Human Perk
-        run: dotnet build LuckyHumanPerk/LuckyHumanPerk.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\\references\\Managed"
+        run: dotnet build LuckyHumanPerk/LuckyHumanPerk.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\references\Managed"
 
       - name: Assemble installable mod
         shell: pwsh
         run: |
-          $root = "${{ runner.temp }}\\LuckyHumanPerkPackage"
+          $root = "${{ runner.temp }}\LuckyHumanPerkPackage"
           $package = Join-Path $root "LuckyHumanPerk"
           New-Item -ItemType Directory -Force -Path $package | Out-Null
-          Copy-Item LuckyHumanPerk\\manifest.xml $package\\manifest.xml
-          Copy-Item LuckyHumanPerk\\bin\\Release\\netstandard2.1\\LuckyHumanPerk.dll $package\\LuckyHumanPerk.dll
-          Copy-Item -Recurse LuckyHumanPerk\\Localization $package\\Localization
-          $icon = "LuckyHumanPerk\\Textures\\Items\\lucky_human_icon.png"
+          Copy-Item LuckyHumanPerk\manifest.xml $package\manifest.xml
+          Copy-Item LuckyHumanPerk\bin\Release\netstandard2.1\LuckyHumanPerk.dll $package\LuckyHumanPerk.dll
+          Copy-Item -Recurse LuckyHumanPerk\Localization $package\Localization
+          $icon = "LuckyHumanPerk\Textures\Items\lucky_human_icon.png"
           if (!(Test-Path $icon)) { throw "Lucky Human perk icon is missing from Textures/Items." }
-          New-Item -ItemType Directory -Force -Path (Join-Path $package "Textures\\Items") | Out-Null
-          Copy-Item $icon (Join-Path $package "Textures\\Items\\lucky_human_icon.png")
-          Compress-Archive -Path "$root\\*" -DestinationPath "${{ runner.temp }}\\LuckyHumanPerk.zip" -Force
+          New-Item -ItemType Directory -Force -Path (Join-Path $package "Textures\Items") | Out-Null
+          Copy-Item $icon (Join-Path $package "Textures\Items\lucky_human_icon.png")
+          Compress-Archive -Path "$root\*" -DestinationPath "${{ runner.temp }}\LuckyHumanPerk.zip" -Force
 
       - name: Verify installable mod package
         shell: pwsh
         run: |
-          $zip = "${{ runner.temp }}\\LuckyHumanPerk.zip"
+          $zip = "${{ runner.temp }}\LuckyHumanPerk.zip"
           $archive = [System.IO.Compression.ZipFile]::OpenRead($zip)
           $names = $archive.Entries | ForEach-Object FullName
           $archive.Dispose()
@@ -62,5 +62,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: LuckyHumanPerk
-          path: ${{ runner.temp }}\\LuckyHumanPerk.zip
+          path: ${{ runner.temp }}\LuckyHumanPerk.zip
           if-no-files-found: error
