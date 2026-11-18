@@ -22,23 +22,22 @@ namespace NewAnimeUniverse.ExtraPrivilegePerk
             ModHelper.AddStartingPerk(
                 ModId,
                 PerkId,
-                // A negative starting-perk cost refunds points to the new-game perk budget.
                 cost: -StartingPerkPointBonus,
                 type: StartingPerk.StartingPerkType.NEGATIVE,
-                name: () => ModHelper.GetLocalized(ModId, "perk_extra_privilege_name"),
-                description: () => ModHelper.GetLocalized(ModId, "perk_extra_privilege_desc"),
+                name: () => "Thêm Tí Đặc Quyền",
+                description: () => "Cộng thêm 1 điểm perk để chọn thiên phú khởi đầu và mở thêm 4 ô perk. Khi bắt đầu lượt chơi mới, trừ 100 Credits đúng một lần; tải bản lưu không bị trừ lại.",
                 iconKey: ModId + ":extra_privilege_icon",
                 extraPerkSlots: ExtraPerkSlots);
 
             ModHook.OnNewGameStarted += ApplyStartingCreditPenalty;
-            log.Log("Registered Thêm Tí Đặc Quyền: +1 starting perk point, +4 starting perk slots, -100 Credits on new-run start.");
+            log.Log("Đã đăng ký Thêm Tí Đặc Quyền: +1 điểm perk, +4 ô perk khởi đầu, -100 Credits khi bắt đầu lượt chơi mới.");
         }
 
         public void OnDisable()
         {
             ModHook.OnNewGameStarted -= ApplyStartingCreditPenalty;
             ModHelper.RemoveStartingPerks(ModId);
-            log?.Log("Unregistered Thêm Tí Đặc Quyền.");
+            log?.Log("Đã gỡ đăng ký Thêm Tí Đặc Quyền.");
         }
 
         private void ApplyStartingCreditPenalty(string scenarioId)
@@ -49,14 +48,13 @@ namespace NewAnimeUniverse.ExtraPrivilegePerk
             PlayerStore store = PlayerStore.Instance;
             if (store == null)
             {
-                log?.Warning("The perk was selected, but PlayerStore was unavailable. The 100-Credit penalty was not applied.");
+                log?.Warning("Đã chọn thiên phú nhưng PlayerStore chưa sẵn sàng. Không thể trừ 100 Credits khởi đầu.");
                 return;
             }
 
-            // OnNewGameStarted fires after the new run's starting scenario and perks are
-            // placed, and is not fired when loading a save. This deducts once per new run.
+            // Sự kiện này chỉ chạy khi tạo lượt chơi mới, không chạy khi tải bản lưu.
             store.ModCash(-StartingCreditPenalty, true);
-            log?.Log("Deducted 100 starting Credits for Thêm Tí Đặc Quyền.");
+            log?.Log("Đã trừ 100 Credits khởi đầu cho thiên phú Thêm Tí Đặc Quyền.");
         }
     }
 }
