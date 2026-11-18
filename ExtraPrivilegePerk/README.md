@@ -18,7 +18,7 @@ The 100-Credit penalty is applied through `PlayerStore.ModCash(-100, true)` in `
 
 Extract the repository's `Managed.zip` into `references/Managed/`, then run:
 
-    dotnet build ExtraPrivilegePerk/ExtraPrivilegePerk.csproj -c Release -p:ManagedDir="C:\\Path\\To\\references\\Managed"
+    dotnet build ExtraPrivilegePerk/ExtraPrivilegePerk.csproj -c Release -p:ManagedDir="C:\Path\To\references\Managed"
 
 The GitHub Actions workflow creates an installable ZIP.
 
