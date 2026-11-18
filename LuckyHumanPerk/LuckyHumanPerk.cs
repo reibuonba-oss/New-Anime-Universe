@@ -26,11 +26,12 @@ namespace NewAnimeUniverse.LuckyHumanPerk
                 type: StartingPerk.StartingPerkType.POSITIVE,
                 name: () => ModHelper.GetLocalized(ModId, "perk_lucky_human_name"),
                 description: () => ModHelper.GetLocalized(ModId, "perk_lucky_human_desc"),
+                iconKey: ModId + ":lucky_human_icon",
                 extraPerkSlots: ExtraPerkSlots);
 
             ModHook.OnNewGameStarted += ApplyStartingLuck;
 
-            log.Log("Registered Con Người May Mắn: +4 starting perk slots and +15 starting Luck for 2 perk points.");
+            log.Log("Registered Con Người May Mắn: +4 starting perk slots, +15 starting Luck for 2 perk points, with its custom clover icon.");
         }
 
         public void OnDisable()
