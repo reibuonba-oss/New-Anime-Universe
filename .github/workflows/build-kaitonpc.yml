@@ -33,13 +33,6 @@ jobs:
       - name: Build Kaito NPC
         run: dotnet build KaitoNPC/KaitoNPC.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\references\Managed"
 
-      - name: Create CI portrait placeholder
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Force -Path KaitoNPC\Textures | Out-Null
-          $png = [Convert]::FromBase64String('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNgYGBgAAAABQABeqhXUAAAAABJRU5ErkJggg==')
-          [IO.File]::WriteAllBytes('KaitoNPC\Textures\kaito.png', $png)
-
       - name: Assemble installable mod
         shell: pwsh
         run: |
