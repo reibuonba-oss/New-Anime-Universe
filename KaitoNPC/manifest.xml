@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Manifest>
   <ID>new_anime_universe.kaito_collector</ID>
-  <Name>Kaito — The Collector</Name>
+  <Name>Kaito — Nhà Sưu Tầm</Name>
   <Author>New Anime Universe</Author>
-  <ModVersion>0.1.0</ModVersion>
-  <Description>A cautious upper-level collector who buys selected weapons, modules, energy cells and luxury goods, and sells practical vanilla technology supplies. Includes custom portrait and Vietnamese/English dialogue.</Description>
+  <ModVersion>0.1.1</ModVersion>
+  <Description>Kaito là một nhà sưu tầm thuộc tầng lớp thượng lưu và khá thận trọng. Anh ấy thu mua một số loại vũ khí, module, pin năng lượng và hàng xa xỉ; đồng thời bán các vật dụng công nghệ hữu ích theo danh mục gốc của game. Mod có chân dung riêng và hội thoại tiếng Việt.</Description>
   <GameVersions>
     <Version>1.0.0</Version>
   </GameVersions>
