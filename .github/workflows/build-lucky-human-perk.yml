@@ -27,25 +27,25 @@ jobs:
 
       - name: Extract game reference assemblies
         shell: pwsh
-        run: Expand-Archive -Path "${{ github.workspace }}\\Managed.zip" -DestinationPath "${{ github.workspace }}\\references\\Managed" -Force
+        run: Expand-Archive -Path "${{ github.workspace }}\Managed.zip" -DestinationPath "${{ github.workspace }}\references\Managed" -Force
 
       - name: Build Lucky Human Perk
-        run: dotnet build LuckyHumanPerk/LuckyHumanPerk.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\\references\\Managed"
+        run: dotnet build LuckyHumanPerk/LuckyHumanPerk.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\references\Managed"
 
       - name: Assemble installable mod
         shell: pwsh
         run: |
-          $root = "${{ runner.temp }}\\LuckyHumanPerkPackage"
+          $root = "${{ runner.temp }}\LuckyHumanPerkPackage"
           $package = Join-Path $root "LuckyHumanPerk"
           New-Item -ItemType Directory -Force -Path $package | Out-Null
-          Copy-Item LuckyHumanPerk\\manifest.xml $package\\manifest.xml
-          Copy-Item LuckyHumanPerk\\bin\\Release\\netstandard2.1\\LuckyHumanPerk.dll $package\\LuckyHumanPerk.dll
-          Copy-Item -Recurse LuckyHumanPerk\\Localization $package\\Localization
-          Compress-Archive -Path "$root\\*" -DestinationPath "${{ runner.temp }}\LuckyHumanPerk.zip" -Force
+          Copy-Item LuckyHumanPerk\manifest.xml $package\manifest.xml
+          Copy-Item LuckyHumanPerk\bin\Release\netstandard2.1\LuckyHumanPerk.dll $package\LuckyHumanPerk.dll
+          Copy-Item -Recurse LuckyHumanPerk\Localization $package\Localization
+          Compress-Archive -Path "$root\*" -DestinationPath "${{ runner.temp }}\LuckyHumanPerk.zip" -Force
 
       - name: Upload installable mod package
         uses: actions/upload-artifact@v4
         with:
           name: LuckyHumanPerk
-          path: ${{ runner.temp }}\\LuckyHumanPerk.zip
+          path: ${{ runner.temp }}\LuckyHumanPerk.zip
           if-no-files-found: error
