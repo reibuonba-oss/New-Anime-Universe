@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Manifest>
   <ID>new_anime_universe.recycler_machine</ID>
-  <Name>Anime Universe — Recycler Machine</Name>
+  <Name>Vũ Trụ Anime — Máy Tái Chế Rác</Name>
   <Author>New Anime Universe</Author>
-  <ModVersion>0.1.1</ModVersion>
-  <Description>A vanilla-style recycling machine with an input bay large enough for the double batch. Processes four Junk into one Scrap Metal overnight; at 50% performance it can process eight Junk into two Scrap Metal. Efficiency modules reduce power use; Quality modules have no effect.</Description>
+  <ModVersion>0.1.2</ModVersion>
+  <Description>Máy tái chế theo phong cách máy móc gốc của game. Xử lý 4 món Rác thành 1 Sắt Vụn qua đêm; khi đạt 50% Hiệu năng có thể xử lý 8 Rác thành 2 Sắt Vụn. Module Hiệu Suất giảm điện tiêu thụ; Module Chất Lượng không ảnh hưởng đến máy.</Description>
   <GameVersions>
     <Version>1.0.0</Version>
   </GameVersions>
