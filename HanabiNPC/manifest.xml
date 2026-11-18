@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Manifest>
   <ID>new_anime_universe.hanabi_merchant</ID>
-  <Name>Hanabi — Mask &amp; Weapon Merchant</Name>
+  <Name>Hanabi — Thương Nhân Mặt Nạ và Vũ Khí</Name>
   <Author>New Anime Universe</Author>
-  <ModVersion>0.1.1</ModVersion>
-  <Description>Hanabi is a rare merchant who sells her custom mask and gun at 5% above their base market values, and buys power-source items and modules. Includes a custom portrait and Vietnamese/English dialogue.</Description>
+  <ModVersion>0.1.2</ModVersion>
+  <Description>Hanabi là một thương nhân hiếm gặp, chuyên bán mặt nạ và súng tùy chỉnh với giá cao hơn 5% so với giá trị thị trường cơ bản; đồng thời thu mua pin năng lượng và module. Mod có chân dung riêng và hội thoại tiếng Việt.</Description>
   <GameVersions>
     <Version>1.0.0</Version>
   </GameVersions>
