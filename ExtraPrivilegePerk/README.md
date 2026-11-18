@@ -1,29 +1,29 @@
-# Thêm Tí Đặc Quyền — Starting Perk
+# Thêm Tí Đặc Quyền — Thiên phú khởi đầu
 
-A standalone starting-perk mod for Probably Stolen.
+Mod độc lập bổ sung thiên phú khởi đầu cho Probably Stolen.
 
-## Perk effects
+## Hiệu ứng
 
-- **Name:** Thêm Tí Đặc Quyền
-- **Perk points:** grants **+1 starting perk point** for the new-game perk-selection budget
-- **Extra slots:** +4 starting-perk slots while this perk is selected
-- **Starting Credits:** deducts 100 Credits once when a new run begins
-- **Icon:** a white 32×32 shield-and-plus glyph in `Textures/Items/extra_privilege_icon.png`; the game tints it red for this negative perk
+- **Tên:** Thêm Tí Đặc Quyền
+- **Điểm perk:** hoàn lại **1 điểm perk** để chọn thiên phú khi bắt đầu lượt chơi mới
+- **Ô perk:** mở thêm 4 ô perk khởi đầu khi chọn thiên phú này
+- **Credits khởi đầu:** trừ 100 Credits đúng một lần khi bắt đầu lượt chơi mới
+- **Biểu tượng:** hình khiên và dấu cộng màu trắng, kích thước 32×32, nằm trong `Textures/Items/extra_privilege_icon.png`; game tự tô màu đỏ vì đây là thiên phú tiêu cực
 
-The perk is registered through the native `ModHelper.AddStartingPerk` API with `cost: -1`, `type: StartingPerk.StartingPerkType.NEGATIVE`, `iconKey: "new_anime_universe.extra_privilege:extra_privilege_icon"`, and `extraPerkSlots: 4`. A negative cost grants one point to the player's perk-selection budget.
+Thiên phú được đăng ký bằng API gốc `ModHelper.AddStartingPerk` với `cost: -1`, `type: StartingPerk.StartingPerkType.NEGATIVE`, `iconKey: "new_anime_universe.extra_privilege:extra_privilege_icon"` và `extraPerkSlots: 4`. Chi phí âm hoàn lại một điểm trong ngân sách chọn perk khởi đầu.
 
-The 100-Credit penalty is applied through `PlayerStore.ModCash(-100, true)` in `ModHook.OnNewGameStarted`. This hook fires for a new run and not when a save is loaded, so loading an existing save will not deduct Credits again.
+Khoản trừ 100 Credits dùng `PlayerStore.ModCash(-100, true)` trong sự kiện `ModHook.OnNewGameStarted`. Sự kiện này chạy khi tạo lượt chơi mới, không chạy khi tải bản lưu, nên không trừ lại khi tiếp tục save cũ.
 
-Perk icons must be item sprites in `Textures/Items/`. The build workflow verifies that the icon is included in the installable ZIP.
+Biểu tượng perk phải được đặt trong `Textures/Items/`. Quy trình build kiểm tra ảnh này có trong ZIP cài đặt.
 
-## Build
+## Biên dịch
 
-Extract the repository's `Managed.zip` into `references/Managed/`, then run:
+Giải nén `Managed.zip` của repository vào `references/Managed/`, sau đó chạy:
 
     dotnet build ExtraPrivilegePerk/ExtraPrivilegePerk.csproj -c Release -p:ManagedDir="C:\Path\To\references\Managed"
 
-The GitHub Actions workflow creates an installable ZIP.
+GitHub Actions sẽ biên dịch DLL và tạo ZIP cài đặt.
 
-## Test notes
+## Kiểm tra
 
-CI verifies compilation and ZIP packaging against the game's reference assemblies. In-game testing is still required to confirm the perk icon appears at the intended size, grants one point, adds four slots, and deducts 100 Credits only on new-run creation.
+CI xác nhận biên dịch và cấu trúc ZIP. Vẫn cần kiểm tra trong game để xác nhận biểu tượng hiển thị đúng kích thước, hoàn lại 1 điểm perk, mở thêm 4 ô và chỉ trừ 100 Credits khi tạo lượt chơi mới.
