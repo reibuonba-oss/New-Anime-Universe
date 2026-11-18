@@ -1,44 +1,42 @@
-# Hanabi NPC — New Anime Universe
+# NPC Hanabi — Vũ Trụ Anime
 
-A standalone Probably Stolen merchant mod.
+Mod thương nhân độc lập cho Probably Stolen.
 
-## Hanabi's trading
+## Hoạt động mua bán của Hanabi
 
-- **Appearance:** one 10% roll per in-game day, evaluated at `OnGenerateCustomerVeryLate`. Hanabi can visit at most once per day.
-- **Buys:** items tagged `power_source_item` (power cells/batteries) and `MODULE`.
-- **Sells:** one Hanabi Mask and one Hanabi Gun on each visit.
-- **Custom item registration:** uses `OnModItemDirectoryInit` and `ModItemDirectory.Add`.
-- **Types:** Hanabi Mask has both `HOUSEHOLD_GOOD` and `LUXURY_ITEM`; Hanabi Gun has `WEAPON`.
-- **Dialogue:** separate Hanabi lines, localized in Vietnamese and English.
-- **Portrait:** uses `Textures/hanabi.png`.
+- **Tỷ lệ xuất hiện:** mỗi ngày trong game có một lần tung xác suất 10% tại sự kiện OnGenerateCustomerVeryLate. Hanabi xuất hiện tối đa một lần mỗi ngày.
+- **Thu mua:** vật phẩm mang thẻ power_source_item (pin năng lượng) và MODULE.
+- **Bày bán:** một Mặt Nạ Hanabi và một Súng Hanabi trong mỗi lần ghé thăm.
+- **Đăng ký vật phẩm riêng:** dùng sự kiện OnModItemDirectoryInit và ModItemDirectory.Add.
+- **Phân loại:** Mặt Nạ Hanabi thuộc cả HOUSEHOLD_GOOD và LUXURY_ITEM; Súng Hanabi thuộc WEAPON.
+- **Hội thoại:** các câu thoại riêng của Hanabi bằng tiếng Việt.
+- **Chân dung:** sử dụng ảnh Textures/hanabi.png.
 
-## Prices
+## Giá bán
 
-The two base market values are **888 credits** (Hanabi Mask) and **999 credits** (Hanabi Gun). Hanabi adds a 5% seller premium to the values placed on her table, rounded to the nearest credit:
+Giá trị thị trường cơ bản là **888 Credits** cho Mặt Nạ Hanabi và **999 Credits** cho Súng Hanabi. Hanabi cộng thêm 5% vào giá niêm yết, làm tròn đến Credit gần nhất:
 
-| Item | Base market value | Hanabi's listed value |
+| Vật phẩm | Giá thị trường cơ bản | Giá Hanabi niêm yết |
 |---|---:|---:|
-| Hanabi Mask | 888 | 932 |
-| Hanabi Gun | 999 | 1,049 |
+| Mặt Nạ Hanabi | 888 | 932 |
+| Súng Hanabi | 999 | 1.049 |
 
-The premium is applied directly to the spawned stock item's `unitValue`; the code does not rely on `StoreClient.sellPriceModifier`.
+Phần tăng giá được áp dụng trực tiếp vào unitValue của bản sao hàng hóa được bày bán; code không phụ thuộc vào StoreClient.sellPriceModifier.
 
-## Build
+## Biên dịch
 
-The repository contains `Managed.zip` at its root. Extract it into `references/Managed/`, then run:
+Repository có Managed.zip ở thư mục gốc. Giải nén vào references/Managed/, sau đó chạy:
 
-```powershell
-dotnet build HanabiNPC/HanabiNPC.csproj -c Release -p:ManagedDir="C:\Path\To\references\Managed"
-```
+    dotnet build HanabiNPC/HanabiNPC.csproj -c Release -p:ManagedDir="C:\Path\To\references\Managed"
 
-The GitHub Actions workflow `.github/workflows/build-hanabinpc.yml` builds the DLL, converts all images to standard 8-bit RGBA PNG, and publishes an installable ZIP artifact with the `HanabiNPC/` folder at its root.
+Workflow .github/workflows/build-hanabinpc.yml sẽ biên dịch DLL, chuyển ảnh sang PNG RGBA 8-bit tiêu chuẩn và xuất ZIP cài đặt có thư mục HanabiNPC/ ở thư mục gốc.
 
-## Install
+## Cài đặt
 
-Extract the ZIP directly into the game's `Mods/` directory. It will create `Mods/HanabiNPC/manifest.xml`, `HanabiNPC.dll`, `Textures/` and `Localization/`. Enable Hanabi in the Mods menu and restart the game.
+Giải nén ZIP trực tiếp vào thư mục Mods/ của game. Mod sẽ tạo Mods/HanabiNPC/manifest.xml, HanabiNPC.dll, Textures/ và Localization/. Bật Hanabi trong menu Mods và khởi động lại game.
 
-## Compatibility
+## Tương thích
 
-The mod registers its two custom item factories through the official item-directory hook. The portrait uses the same customer-sprite dictionary technique as the project's Rem and Kurumi NPC mods; customer sprite registration is compatibility-sensitive and should be verified in-game after game updates.
+Mod đăng ký hai bộ tạo vật phẩm tùy chỉnh thông qua sự kiện thư mục vật phẩm chính thức. Chân dung sử dụng cùng kỹ thuật đăng ký sprite khách hàng như Rem và Kurumi; cần kiểm tra lại sau mỗi bản cập nhật game.
 
-Hanabi Gun is registered as a custom item with the `WEAPON` game-item type. This implementation does not add firing, ammunition, or equip/combat behaviour.
+Súng Hanabi được đăng ký là vật phẩm tùy chỉnh có loại WEAPON. Bản triển khai này không bổ sung cơ chế bắn, đạn, trang bị hoặc chiến đấu.
