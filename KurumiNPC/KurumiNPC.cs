@@ -246,11 +246,11 @@ namespace NewAnimeUniverse.KurumiNPC
 
             kurumi.mainDialogue = new Dialogue();
             kurumi.mainDialogue
-                .SetText("Kurumi", Text("kurumi.greeting", "Good evening. I'm Kurumi. I deal in weapons, advanced power cells, and specialist modules."))
+                .SetText("Kurumi", Text("kurumi.greeting", "Chào buổi tối. Tôi là Kurumi. Tôi kinh doanh vũ khí, pin năng lượng cao cấp và các module chuyên dụng."))
                 .NextDialogue()
-                .SetText("Kurumi", Text("kurumi.buy", "I'm buying firearms, melee weapons, and gun modifications. Bring me something worth keeping, and I'll make you a fair offer."))
+                .SetText("Kurumi", Text("kurumi.buy", "Tôi đang thu mua súng, vũ khí cận chiến và phụ kiện súng. Có món nào đáng giữ thì cứ đưa ra, tôi sẽ trả giá hợp lý."))
                 .NextDialogue()
-                .SetText("Kurumi", Text("kurumi.stock", "Take a look at my supplies. These self-charging cells and precision modules are hard to find."))
+                .SetText("Kurumi", Text("kurumi.stock", "Hãy xem hàng của tôi. Pin tự sạc và những module tinh chỉnh này không dễ tìm đâu."))
                 .SetEndAction(PlaceKurumiStock);
 
             kurumi.AddBasicDialog();
@@ -303,10 +303,7 @@ namespace NewAnimeUniverse.KurumiNPC
 
         private static string Text(string key, string fallback)
         {
-            string value = ModHelper.GetLocalized(ModId, key, null);
-            if (string.IsNullOrEmpty(value) || value == key)
-                return fallback;
-            return value;
+            return fallback;
         }
     }
 }
