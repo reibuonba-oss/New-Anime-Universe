@@ -1,5 +1,5 @@
-advanced_charger.name,Advanced Battery Charger
-advanced_charger.description,"Charges inserted power cells at twice the speed of a standard Recharger. Requires grid power."
-advanced_charger.flavor,"A reinforced high-output station built to refill power cells faster."
-advanced_charger.tooltip.rate,"Charging speed: 2× standard Recharger"
-advanced_charger.tooltip.power,"6 kJ per night; 12 kJ with Commercial Power unlocked."
+advanced_charger.name,Trạm Sạc Pin Nâng Cao
+advanced_charger.description,"Sạc pin năng lượng được lắp vào nhanh gấp đôi máy Sạc Pin tiêu chuẩn. Cần có điện lưới."
+advanced_charger.flavor,"Trạm sạc gia cố công suất cao, được thiết kế để nạp pin nhanh hơn."
+advanced_charger.tooltip.rate,"Tốc độ sạc: gấp 2 lần máy Sạc Pin tiêu chuẩn."
+advanced_charger.tooltip.power,"6 kJ mỗi đêm; 12 kJ khi đã mở khóa Điện Thương Mại."
