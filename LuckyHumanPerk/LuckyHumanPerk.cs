@@ -24,22 +24,21 @@ namespace NewAnimeUniverse.LuckyHumanPerk
                 PerkId,
                 cost: PerkPointCost,
                 type: StartingPerk.StartingPerkType.POSITIVE,
-                name: () => ModHelper.GetLocalized(ModId, "perk_lucky_human_name"),
-                description: () => ModHelper.GetLocalized(ModId, "perk_lucky_human_desc"),
+                name: () => "Con Người May Mắn",
+                description: () => "Mở thêm 4 ô perk khởi đầu và cộng 15 điểm May Mắn khi bắt đầu lượt chơi mới. Tốn 2 điểm perk.",
                 iconKey: ModId + ":lucky_human_icon",
                 extraPerkSlots: ExtraPerkSlots);
 
             ModHook.OnNewGameStarted += ApplyStartingLuck;
 
-            log.Log("Registered Con Người May Mắn: +4 starting perk slots, +15 starting Luck for 2 perk points, with its custom clover icon.");
+            log.Log("Đã đăng ký Con Người May Mắn: +4 ô perk khởi đầu và +15 điểm May Mắn, tiêu tốn 2 điểm perk.");
         }
 
         public void OnDisable()
         {
             ModHook.OnNewGameStarted -= ApplyStartingLuck;
             ModHelper.RemoveStartingPerks(ModId);
-
-            log?.Log("Unregistered Con Người May Mắn.");
+            log?.Log("Đã gỡ đăng ký Con Người May Mắn.");
         }
 
         private void ApplyStartingLuck(string scenarioId)
@@ -50,15 +49,13 @@ namespace NewAnimeUniverse.LuckyHumanPerk
             PlayerStore store = PlayerStore.Instance;
             if (store == null || store.healthData == null)
             {
-                log?.Warning("The starting perk was selected, but HealthData was unavailable when OnNewGameStarted fired. Starting Luck was not changed.");
+                log?.Warning("Đã chọn thiên phú nhưng dữ liệu sức khỏe chưa sẵn sàng. Không thể cộng điểm May Mắn khởi đầu.");
                 return;
             }
 
-            // Luck is stored on HealthData and saved with the run. Apply only at new-run
-            // creation; applying again on a load would incorrectly stack the bonus.
+            // May Mắn được lưu trong dữ liệu của lượt chơi; chỉ cộng khi bắt đầu run mới.
             store.healthData.luck += StartingLuckBonus;
-
-            log?.Log("Applied +15 starting Luck for Con Người May Mắn. HealthData.luck is now " + store.healthData.luck + ".");
+            log?.Log("Đã cộng 15 điểm May Mắn cho Con Người May Mắn. Tổng May Mắn hiện tại: " + store.healthData.luck + ".");
         }
     }
 }
