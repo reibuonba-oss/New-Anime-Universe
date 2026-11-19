@@ -1,0 +1,49 @@
+name: Inspect WaterTower native game API
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Extract references and install ILSpy
+        shell: pwsh
+        run: |
+          Expand-Archive -Path "${{ github.workspace }}\\Managed.zip" -DestinationPath "${{ github.workspace }}\\references\\Managed" -Force
+          dotnet tool install --global ilspycmd --version 9.1.0.7988
+          $env:PATH += ";$env:USERPROFILE\\.dotnet\\tools"
+      - name: List relevant types
+        shell: pwsh
+        run: |
+          $env:PATH += ";$env:USERPROFILE\\.dotnet\\tools"
+          $asm = "references\\Managed\\Assembly-CSharp.dll"
+          ilspycmd -l c $asm | Select-String -Pattern "Water|Liquid|Moist|Purif|Machine|Doctor|ClientList|ModHook|ModItemDirectory|ModHelper|StoreClient|StoreStation|LiquidContainer|Filter|NetworkUpgrade|ItemDirectory" | ForEach-Object { Write-Host $_.Line }
+      - name: Decompile targeted API
+        shell: pwsh
+        run: |
+          $env:PATH += ";$env:USERPROFILE\\.dotnet\\tools"
+          $asm = "references\\Managed\\Assembly-CSharp.dll"
+          $temp = "${{ runner.temp }}\\WTApi"
+          New-Item -ItemType Directory -Force -Path $temp | Out-Null
+          $types = @(
+            "WaterHelper","LiquidContainerHelper","MoistureFarm","WaterPurifier","WaterCollector","WaterStorage",
+            "GameItem","GameInventory","GameGridInventory","GameSlotInventory","GameGridScrollableInventory",
+            "MachineHelper","MachineRecharger","MachineryHelper","PowerHelper","ModItemDirectory","ItemDirectory",
+            "StoreClientList","StoreClient","StoreStation","ModHook","ModHelper","PlayerStore","EmporiumEntry",
+            "Doctor","NetworkUpgrade","LiquidContainer","WaterContainer","ModConfig","ModSetting","ModUIManager"
+          )
+          foreach ($type in $types) {
+            $path = Join-Path $temp (($type -replace '[^A-Za-z0-9]+','_') + ".cs")
+            & ilspycmd -t $type $asm 2>&1 | Out-File -Encoding utf8 $path
+          }
+          Write-Host "=== RELEVANT API MEMBER CONTEXT ==="
+          Get-ChildItem $temp -Filter *.cs | ForEach-Object {
+            Write-Host ("--- " + $_.BaseName + " ---")
+            Select-String -Path $_.FullName -Pattern "water|Water|Liquid|liquid|Purif|Moist|Filter|Tank|Machine|machine|Doctor|doctor|StoreClient|client|Register|AddItem|ModItemDirectory|ModHook|Config|Setting|Inventory|InventoryWindow|Spawn|Create|EndNight|Cycle|OnBought|GetWater|SetWater" -Context 2,5 |
+              Select-Object -First 45 | ForEach-Object { Write-Host $_.ToString() }
+          }
