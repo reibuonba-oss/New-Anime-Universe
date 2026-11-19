@@ -53,3 +53,12 @@ jobs:
             Select-String -Path $_.FullName -Pattern "water|Water|Liquid|liquid|Purif|Moist|Filter|Tank|Machine|machine|Doctor|doctor|StoreClient|client|Register|AddItem|ModItemDirectory|ModHook|Config|Setting|Inventory|InventoryWindow|Spawn|Create|EndNight|Cycle|OnBought|GetWater|SetWater" -Context 2,5 |
               Select-Object -First 45 | ForEach-Object { Write-Host $_.ToString() }
           }
+      - name: Archive decompiled API sources
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "${{ runner.temp }}\\WTApi\\*" -DestinationPath "${{ runner.temp }}\\WTApi.zip" -Force
+      - name: Upload decompiled API sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: WTApi
+          path: ${{ runner.temp }}\\WTApi.zip
