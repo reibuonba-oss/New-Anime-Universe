@@ -37,7 +37,7 @@ jobs:
           $temp = "${{ runner.temp }}\\WTApi"
           New-Item -ItemType Directory -Force -Path $temp | Out-Null
           $types = @(
-            "WaterHelper","LiquidContainerHelper","MoistureFarm","WaterPurifier","WaterCollector","WaterStorage",
+            "WaterHelper","LiquidContainerHelper","MachineMoistureFarm","MachinePurifier","WaterFeatureHelper","WaterTankHelper","WaterLiquidHelper","Liquid","StoreClientListWater","StoreClientManager","MachineryContainerUtils",
             "GameItem","GameInventory","GameGridInventory","GameSlotInventory","GameGridScrollableInventory",
             "MachineHelper","MachineRecharger","MachineryHelper","PowerHelper","ModItemDirectory","ItemDirectory",
             "StoreClientList","StoreClient","StoreStation","ModHook","ModHelper","PlayerStore","EmporiumEntry",
