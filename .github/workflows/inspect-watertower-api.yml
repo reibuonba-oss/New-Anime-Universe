@@ -1,5 +1,11 @@
 name: Inspect WaterTower native game API
 on:
+  push:
+    branches:
+      - feature/water-tower-native
+    paths:
+      - '.github/workflows/inspect-watertower-api.yml'
+      - 'WaterTowerNative/**'
   workflow_dispatch:
 permissions:
   contents: read
