@@ -16,6 +16,7 @@ namespace NewAnimeUniverse.ReiNPC
 
         public const string DrinkItemId = "nau_red_dragon_energy";
         private const long BaseDrinkPrice = 15L;
+        private const double WholesaleDiscount = 0.08d;
 
         private const int DailyAppearanceChance = 25;
         private const int EarlyPurchaseBudget = 250;
@@ -233,7 +234,7 @@ namespace NewAnimeUniverse.ReiNPC
             rei.mainDialogue
                 .SetText("Rei", Text("rei.greeting", "Hi. I'm Rei. I brought a drink called Red Dragon Energy Drink today."))
                 .NextDialogue()
-                .SetText("Rei", Text("rei.offer", "One can has a base price of 15 Credits. You can chill it in a refrigerator to raise its market value."))
+                .SetText("Rei", Text("rei.offer", "One can has a base value of 15 Credits. Rei sells at an 8% wholesale discount; chilling it in a refrigerator raises its market value."))
                 .NextDialogue()
                 .SetText("Rei", Text("rei.buy", "I also buy luxury goods. My purchase budget is 250 Credits before day 30, then 450 Credits."))
                 .SetEndAction(PlaceReiStock);
@@ -261,10 +262,14 @@ namespace NewAnimeUniverse.ReiNPC
                     return;
                 }
 
-                // Set only the base value. Chilling and market modifiers stay native to the game.
-                drink.unitValue = BaseDrinkPrice;
+                // Keep the registered item at its 15-Credit base value. The counter copy
+                // receives Rei's 8% wholesale discount; the fridge feature remains native.
+                long wholesalePrice = (long)Math.Round(
+                    BaseDrinkPrice * (1.0d - WholesaleDiscount),
+                    MidpointRounding.AwayFromZero);
+                drink.unitValue = wholesalePrice;
                 store.AddDirectSellingItemToTable(drink, false, false, false, 0);
-                log.Log("Placed Red Dragon Energy Drink on Rei's table at a base value of 15 Credits.");
+                log.Log("Placed Red Dragon Energy Drink on Rei's table at the 8% wholesale price of " + wholesalePrice + " Credits.");
             }
             catch (Exception ex)
             {
