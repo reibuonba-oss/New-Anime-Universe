@@ -49,7 +49,6 @@ jobs:
           $zip = "${{ runner.temp }}\ReiNPC.zip"
           $archive = [System.IO.Compression.ZipFile]::OpenRead($zip)
           $names = $archive.Entries | ForEach-Object FullName
-          $archive.Dispose()
           $required = @(
             "manifest.xml",
             "ReiNPC.dll",
@@ -69,6 +68,7 @@ jobs:
           $header = New-Object byte[] 24
           $read = $pngStream.Read($header, 0, 24)
           $pngStream.Dispose()
+          $archive.Dispose()
           if ($read -ne 24) { throw "Modern cup noodle PNG header is incomplete." }
           $signature = [System.Convert]::ToHexString($header[0..7])
           if ($signature -ne "89504E470D0A1A0A") { throw "Modern cup noodle asset is not a valid PNG." }
