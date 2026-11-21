@@ -4,8 +4,8 @@ using UnityEngine;
 namespace NewAnimeUniverse.ReiNPC
 {
     /// <summary>
-    /// Rei is a rare merchant who sells Red Dragon energy drinks and buys luxury goods.
-    /// The drink uses the game's native beverage and fridge value features.
+    /// Rei is a rare merchant who sells Red Dragon energy drinks, Modern cup noodles,
+    /// and buys luxury goods. The drink uses the game's native fridge value features.
     /// </summary>
     public sealed class ReiNPCMod : IMod
     {
@@ -15,7 +15,9 @@ namespace NewAnimeUniverse.ReiNPC
         private const string PortraitTextureKey = "rei";
 
         public const string DrinkItemId = "nau_red_dragon_energy";
+        public const string ModernCupNoodleItemId = "nau_modern_cup_noodle";
         private const long BaseDrinkPrice = 15L;
+        private const long BaseModernCupNoodlePrice = 30L;
         private const double WholesaleDiscount = 0.08d;
 
         private const int DailyAppearanceChance = 25;
@@ -58,7 +60,8 @@ namespace NewAnimeUniverse.ReiNPC
                 return;
 
             directory.Add(DrinkItemId, CreateRedDragonEnergyDrink);
-            log.Log("Registered Red Dragon Energy Drink.");
+            directory.Add(ModernCupNoodleItemId, CreateModernCupNoodle);
+            log.Log("Registered Red Dragon Energy Drink and Modern Cup Noodles.");
         }
 
         private static GameItem CreateRedDragonEnergyDrink()
@@ -77,6 +80,21 @@ namespace NewAnimeUniverse.ReiNPC
             item.SetGameItemType("BREVAGE");
             item.SetGameItemType("FOOD");
             item.SetSpriteAndShapeFromMod(ModId, "red_dragon_energy");
+            ModHelper.SetSource(item, ModId, "Anime Universe — Rei");
+            return item;
+        }
+
+        private static GameItem CreateModernCupNoodle()
+        {
+            GameItem item = ItemDirectory.CreateEmptyItem(ModernCupNoodleItemId);
+            item.name = Text("rei.noodle.name", "Mì Ly Modern");
+            item.shortDescription = Text("rei.noodle.description", "Mì ly Modern hương vị lẩu Thái tôm.");
+            item.flavorText = Text("rei.noodle.flavor", "Một ly mì tiện lợi với hương vị lẩu Thái tôm.");
+
+            item.unitValue = BaseModernCupNoodlePrice;
+            item.SetGameItemType("FOOD");
+            item.SetGameItemType("HOUSEHOLD_GOOD");
+            item.SetSpriteAndShapeFromMod(ModId, "modern_cup_noodle");
             ModHelper.SetSource(item, ModId, "Anime Universe — Rei");
             return item;
         }
@@ -232,9 +250,9 @@ namespace NewAnimeUniverse.ReiNPC
 
             rei.mainDialogue = new Dialogue();
             rei.mainDialogue
-                .SetText("Rei", Text("rei.greeting", "Hi. I'm Rei. I brought a drink called Red Dragon Energy Drink today."))
+                .SetText("Rei", Text("rei.greeting", "Hi. I'm Rei. I brought Red Dragon Energy Drink and Modern cup noodles today."))
                 .NextDialogue()
-                .SetText("Rei", Text("rei.offer", "One can has a base value of 15 Credits. Rei sells at an 8% wholesale discount; chilling it in a refrigerator raises its market value."))
+                .SetText("Rei", Text("rei.offer", "Red Dragon has a base value of 15 Credits and Modern cup noodles have a base value of 30 Credits. My counter prices include an 8% wholesale discount. Chill Red Dragon in a refrigerator to raise its market value."))
                 .NextDialogue()
                 .SetText("Rei", Text("rei.buy", "I also buy luxury goods. My purchase budget is 250 Credits before day 30, then 450 Credits."))
                 .SetEndAction(PlaceReiStock);
@@ -253,27 +271,36 @@ namespace NewAnimeUniverse.ReiNPC
                 return;
             }
 
+            int placed = 0;
+            placed += PlaceReiItem(store, DrinkItemId, BaseDrinkPrice, "Red Dragon Energy Drink");
+            placed += PlaceReiItem(store, ModernCupNoodleItemId, BaseModernCupNoodlePrice, "Modern Cup Noodles");
+            log.Log("Rei's stock was placed: " + placed + " item(s).");
+        }
+
+        private int PlaceReiItem(PlayerStore store, string itemId, long basePrice, string displayName)
+        {
             try
             {
-                GameItem drink = DirectoryMaster.Item(DrinkItemId, true);
-                if (drink == null)
+                GameItem item = DirectoryMaster.Item(itemId, true);
+                if (item == null)
                 {
-                    log.Warning("Red Dragon Energy Drink could not be created for Rei's stock.");
-                    return;
+                    log.Warning(displayName + " could not be created for Rei's stock.");
+                    return 0;
                 }
 
-                // Keep the registered item at its 15-Credit base value. The counter copy
-                // receives Rei's 8% wholesale discount; the fridge feature remains native.
+                // Each stock copy receives the same 8% wholesale discount.
                 long wholesalePrice = (long)Math.Round(
-                    BaseDrinkPrice * (1.0d - WholesaleDiscount),
+                    basePrice * (1.0d - WholesaleDiscount),
                     MidpointRounding.AwayFromZero);
-                drink.unitValue = wholesalePrice;
-                store.AddDirectSellingItemToTable(drink, false, false, false, 0);
-                log.Log("Placed Red Dragon Energy Drink on Rei's table at the 8% wholesale price of " + wholesalePrice + " Credits.");
+                item.unitValue = wholesalePrice;
+                store.AddDirectSellingItemToTable(item, false, false, false, 0);
+                log.Log("Placed " + displayName + " on Rei's table at the 8% wholesale price of " + wholesalePrice + " Credits.");
+                return 1;
             }
             catch (Exception ex)
             {
-                log.Warning("Could not place Red Dragon Energy Drink on Rei's table: " + ex.Message);
+                log.Warning("Could not place " + displayName + " on Rei's table: " + ex.Message);
+                return 0;
             }
         }
 

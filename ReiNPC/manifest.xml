@@ -3,8 +3,8 @@
   <ID>new_anime_universe.rei_red_dragon</ID>
   <Name>Rei — Red Dragon Merchant</Name>
   <Author>New Anime Universe</Author>
-  <ModVersion>0.1.0</ModVersion>
-  <Description>Rei is a rare merchant who sells Red Dragon Energy Drink for a base value of 15 Credits and buys luxury goods. The beverage can be chilled using the game's native refrigerator system.</Description>
+  <ModVersion>0.2.0</ModVersion>
+  <Description>Rei is a rare merchant who sells Red Dragon Energy Drink (base value 15 Credits) and Modern cup noodles (base value 30 Credits), and buys luxury goods. The beverage can be chilled using the game's native refrigerator system. Counter stock uses an 8% wholesale discount.</Description>
   <GameVersions>
     <Version>1.0.0</Version>
   </GameVersions>

@@ -1,4 +1,4 @@
-# Rei — Thương nhân Nước Tăng Lực Rồng Đỏ
+# Rei — Thương nhân Nước Tăng Lực Rồng Đỏ và Mì Ly Modern
 
 Mod NPC độc lập cho Probably Stolen, thuộc dự án New Anime Universe.
 
@@ -6,18 +6,19 @@ Mod NPC độc lập cho Probably Stolen, thuộc dự án New Anime Universe.
 
 - **Tỷ lệ xuất hiện:** một lần tung xác suất độc lập **25% mỗi ngày trong game**, tại `OnGenerateCustomerVeryLate`.
 - **Chu kỳ xuất hiện:** mỗi ngày chỉ tung một lần. Nếu Rei xuất hiện vào ngày N, cô ấy có thể được tung xác suất xuất hiện lại từ ngày N+1.
-- **Bán:** một lon **Nước Tăng Lực Rồng Đỏ** trong mỗi lần ghé thăm.
+- **Bán:** một lon **Nước Tăng Lực Rồng Đỏ** và một ly **Mì Ly Modern** trong mỗi lần ghé thăm.
 - **Giá cơ bản:** **15 Credits** mỗi lon.
-- **Giá bán sỉ:** giảm **8%** trên giá cơ bản; lon 15 Credits được làm tròn thành **14 Credits** tại quầy.
+- **Mì Ly Modern:** giá cơ bản **30 Credits**, thuộc hai nhóm `FOOD` và `HOUSEHOLD_GOOD`.
+- **Giá bán sỉ:** giảm **8%** trên giá cơ bản; lon 15 Credits còn **14 Credits**, Mì Ly Modern 30 Credits còn **28 Credits** tại quầy.
 - **Ướp lạnh:** vật phẩm được đăng ký với loại đồ uống gốc `BREVAGE` và `FOOD`, để hệ thống tủ lạnh của game nhận diện. Tủ lạnh tự thêm các ItemFeature lạnh và áp dụng điều chỉnh giá trị thị trường gốc. Mod không tự cộng thêm một khoản lạnh riêng, tránh cộng trùng với công thức của game.
 - **Thu mua:** chỉ các mặt hàng mang loại `LUXURY_ITEM`.
 - **Ngân sách thu mua:** **250 Credits** trước ngày 30; tăng lên **450 Credits** từ ngày 30 trở đi.
 - **Giao dịch:** `StoreClient.ClientIntent.SELLNBUY`, cho phép mua và bán trong cùng một lần ghé thăm.
-- **Chân dung:** dùng `Textures/rei.png`; lon nước dùng `Textures/Items/red_dragon_energy.png`.
+- **Chân dung:** dùng `Textures/rei.png`; lon nước dùng `Textures/Items/red_dragon_energy.png`; mì ly dùng `Textures/Items/modern_cup_noodle.png`.
 
 ## Giá bán và làm lạnh
 
-`unitValue` gốc của vật phẩm được đặt là 15 Credits. Khi Rei bày lon lên quầy, bản sao hàng hóa nhận mức chiết khấu bán sỉ 8% (giá quầy làm tròn thành 14 Credits). Khi người chơi đưa lon vào tủ lạnh có điện, game tự quản lý trạng thái `chilled` hoặc `iceCold` và các ItemFeature tương ứng. Mod không cộng thêm khoản thưởng lạnh thủ công.
+`unitValue` gốc của lon nước là 15 Credits và mì ly là 30 Credits. Khi Rei bày hàng lên quầy, từng bản sao nhận mức chiết khấu bán sỉ 8% (giá quầy lần lượt làm tròn thành 14 và 28 Credits). Khi người chơi đưa lon vào tủ lạnh có điện, game tự quản lý trạng thái `chilled` hoặc `iceCold` và các ItemFeature tương ứng. Mod không cộng thêm khoản thưởng lạnh thủ công.
 
 Điều này giữ cho cơ chế làm lạnh tương thích với hệ thống tủ lạnh gốc và tránh áp dụng hai lần cùng một phần trăm tăng giá.
 
@@ -35,4 +36,4 @@ Workflow `.github/workflows/build-rei-npc.yml` sẽ biên dịch DLL và tạo a
 
 Tạo thư mục `Mods/ReiNPC/` trong thư mục game, sau đó giải nén toàn bộ nội dung `ReiNPC.zip` vào `Mods/ReiNPC/`. Bật **Rei — Red Dragon Merchant** trong menu Mods và khởi động lại game.
 
-CI kiểm tra biên dịch và cấu trúc ZIP. Vẫn cần kiểm tra trong game để xác nhận Rei xuất hiện đúng xác suất, giao dịch hàng xa xỉ, giá 15 Credits và lon nước nhận được ItemFeature lạnh từ tủ lạnh.
+CI kiểm tra biên dịch và cấu trúc ZIP. Vẫn cần kiểm tra trong game để xác nhận Rei xuất hiện đúng xác suất, giao dịch hàng xa xỉ, hai món hàng có đúng nhóm và giá, và lon nước nhận được ItemFeature lạnh từ tủ lạnh.

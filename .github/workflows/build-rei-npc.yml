@@ -55,6 +55,7 @@ jobs:
             "ReiNPC.dll",
             "Textures/rei.png",
             "Textures/Items/red_dragon_energy.png",
+            "Textures/Items/modern_cup_noodle.png",
             "Localization/en.csv",
             "Localization/vi.csv"
           )
