@@ -1,0 +1,70 @@
+name: Build Rei NPC
+
+on:
+  push:
+    branches:
+      - feature/rei-red-dragon-merchant
+    paths:
+      - 'ReiNPC/**'
+      - 'Managed.zip'
+      - '.github/workflows/build-rei-npc.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Extract game reference assemblies
+        shell: pwsh
+        run: Expand-Archive -Path "${{ github.workspace }}\Managed.zip" -DestinationPath "${{ github.workspace }}\references\Managed" -Force
+
+      - name: Build Rei NPC
+        run: dotnet build ReiNPC/ReiNPC.csproj --configuration Release -p:ManagedDir="${{ github.workspace }}\references\Managed"
+
+      - name: Assemble installable mod
+        shell: pwsh
+        run: |
+          $package = "${{ runner.temp }}\ReiNPC"
+          New-Item -ItemType Directory -Force -Path $package | Out-Null
+          Copy-Item ReiNPC\manifest.xml $package\manifest.xml
+          Copy-Item ReiNPC\bin\Release\netstandard2.1\ReiNPC.dll $package\ReiNPC.dll
+          Copy-Item -Recurse ReiNPC\Textures $package\Textures
+          Copy-Item -Recurse ReiNPC\Localization $package\Localization
+          Compress-Archive -Path "$package\*" -DestinationPath "${{ runner.temp }}\ReiNPC.zip" -Force
+
+      - name: Verify installable package
+        shell: pwsh
+        run: |
+          $zip = "${{ runner.temp }}\ReiNPC.zip"
+          $archive = [System.IO.Compression.ZipFile]::OpenRead($zip)
+          $names = $archive.Entries | ForEach-Object FullName
+          $archive.Dispose()
+          $required = @(
+            "manifest.xml",
+            "ReiNPC.dll",
+            "Textures/rei.png",
+            "Textures/Items/red_dragon_energy.png",
+            "Localization/en.csv",
+            "Localization/vi.csv"
+          )
+          foreach ($entry in $required) {
+            if ($names -notcontains $entry) { throw "Package is missing: $entry" }
+          }
+
+      - name: Upload installable mod package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ReiNPC
+          path: ${{ runner.temp }}\ReiNPC.zip
+          if-no-files-found: error
