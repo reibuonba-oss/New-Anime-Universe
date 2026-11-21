@@ -33,6 +33,6 @@ Workflow `.github/workflows/build-rei-npc.yml` sẽ biên dịch DLL và tạo a
 
 ## Cài đặt
 
-Giải nén `ReiNPC.zip` vào thư mục `Mods/` của game, bật **Rei — Red Dragon Merchant** trong menu Mods và khởi động lại game.
+Tạo thư mục `Mods/ReiNPC/` trong thư mục game, sau đó giải nén toàn bộ nội dung `ReiNPC.zip` vào `Mods/ReiNPC/`. Bật **Rei — Red Dragon Merchant** trong menu Mods và khởi động lại game.
 
 CI kiểm tra biên dịch và cấu trúc ZIP. Vẫn cần kiểm tra trong game để xác nhận Rei xuất hiện đúng xác suất, giao dịch hàng xa xỉ, giá 15 Credits và lon nước nhận được ItemFeature lạnh từ tủ lạnh.
