@@ -63,6 +63,21 @@ jobs:
             if ($names -notcontains $entry) { throw "Package is missing: $entry" }
           }
 
+          # Validate the cup-noodle sprite bytes and its intended 1x2-cell footprint.
+          $pngEntry = $archive.GetEntry("Textures/Items/modern_cup_noodle.png")
+          $pngStream = $pngEntry.Open()
+          $header = New-Object byte[] 24
+          $read = $pngStream.Read($header, 0, 24)
+          $pngStream.Dispose()
+          if ($read -ne 24) { throw "Modern cup noodle PNG header is incomplete." }
+          $signature = [System.Convert]::ToHexString($header[0..7])
+          if ($signature -ne "89504E470D0A1A0A") { throw "Modern cup noodle asset is not a valid PNG." }
+          $width = ([int]$header[16] * 16777216) + ([int]$header[17] * 65536) + ([int]$header[18] * 256) + [int]$header[19]
+          $height = ([int]$header[20] * 16777216) + ([int]$header[21] * 65536) + ([int]$header[22] * 256) + [int]$header[23]
+          if ($width -ne 64 -or $height -ne 128) {
+            throw "Modern cup noodle sprite must be 64x128 px (1x2 inventory cells), got $($width)x$($height)."
+          }
+
       - name: Upload installable mod package
         uses: actions/upload-artifact@v4
         with:

@@ -8,7 +8,7 @@ Mod NPC độc lập cho Probably Stolen, thuộc dự án New Anime Universe.
 - **Chu kỳ xuất hiện:** mỗi ngày chỉ tung một lần. Nếu Rei xuất hiện vào ngày N, cô ấy có thể được tung xác suất xuất hiện lại từ ngày N+1.
 - **Bán:** một lon **Nước Tăng Lực Rồng Đỏ** và một ly **Mì Ly Modern** trong mỗi lần ghé thăm.
 - **Giá cơ bản:** **15 Credits** mỗi lon.
-- **Mì Ly Modern:** giá cơ bản **30 Credits**, thuộc hai nhóm `FOOD` và `HOUSEHOLD_GOOD`.
+- **Mì Ly Modern:** giá cơ bản **30 Credits**, thuộc hai nhóm `FOOD` và `HOUSEHOLD_GOOD`; sprite vật phẩm có kích thước **64×128 px**, tương ứng footprint 1×2 ô kho.
 - **Giá bán sỉ:** giảm **8%** trên giá cơ bản; lon 15 Credits còn **14 Credits**, Mì Ly Modern 30 Credits còn **28 Credits** tại quầy.
 - **Ướp lạnh:** vật phẩm được đăng ký với loại đồ uống gốc `BREVAGE` và `FOOD`, để hệ thống tủ lạnh của game nhận diện. Tủ lạnh tự thêm các ItemFeature lạnh và áp dụng điều chỉnh giá trị thị trường gốc. Mod không tự cộng thêm một khoản lạnh riêng, tránh cộng trùng với công thức của game.
 - **Thu mua:** chỉ các mặt hàng mang loại `LUXURY_ITEM`.
