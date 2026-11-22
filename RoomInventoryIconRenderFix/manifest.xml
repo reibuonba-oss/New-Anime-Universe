@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Manifest>
+  <ID>new_anime_universe.room_inventory_icon_render_fix</ID>
+  <Name>Room Inventory Icon Render Fix</Name>
+  <Author>New Anime Universe</Author>
+  <ModVersion>0.1.0</ModVersion>
+  <Description>Fixes item icons being drawn underneath grid lines in every Claims &amp; Uprisings room inventory. Visual-only Harmony patch using the game's native PixelElement.ToFront method.</Description>
+  <GameVersions>
+    <Version>1.0.0</Version>
+  </GameVersions>
+  <Prerequisites />
+  <Assemblies>
+    <Assembly>RoomInventoryIconRenderFix.dll</Assembly>
+  </Assemblies>
+  <Capabilities />
+</Manifest>
