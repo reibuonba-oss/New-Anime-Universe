@@ -1,28 +1,28 @@
-# Room Inventory Icon Render Fix
+# Room Inventory Icon Render Fix 0.1.1
 
 Standalone visual-only add-on for the shared room inventory surface in **Probably Stolen: Claims & Uprisings**.
 
 ## Fixed symptom
 
-Module and ingredient icons appear underneath the inventory cell lines in room windows. The room mod uses the same `RoomClusterSurface` for module grids, input/output grids, and single-slot inventories across room types.
+Module and ingredient icons appear underneath inventory cell lines in multiple room types.
 
-## Patch
+## What changed in 0.1.1
 
-- Hooks `RoomClusterSurface.Borrow`, `BorrowClipped`, and `Apply`.
-- Finds each borrowed `GameInventory` and its `childItems`.
-- Calls the game's native `PixelElement.ToFront()` on each rendered item icon, after the room surface has applied its positions.
-- Does not change item sprites, item scale, inventory dimensions, item shapes, slot count, recipe rules, module effects, production, or drag/drop checks.
-- Removes its Harmony patches when this add-on is disabled.
+- Removed the postfix on `RoomClusterSurface.Apply`. That method may run repeatedly during layout and scrolling, so walking every inventory after each call was unnecessary work on the UI thread.
+- The patch now runs only after `Borrow` or `BorrowClipped` attaches an inventory panel.
+- Uses the native `GameInventory.childItems` list and `PixelElement.ToFront()` directly; no reflective traversal of inventory collections.
+- It does not change item sprites, scale, shapes, slot counts, recipes, module effects, production, or drag/drop checks.
+- All Harmony hooks are removed when the add-on is disabled.
 
 ## Install
 
-1. Create `Mods/RoomInventoryIconRenderFix/`.
-2. Extract the contents of `RoomInventoryIconRenderFix.zip` into that folder.
-3. Confirm `Mods/RoomInventoryIconRenderFix/manifest.xml` and `RoomInventoryIconRenderFix/RoomInventoryIconRenderFix.dll` exist.
+1. Remove the older `RoomInventoryIconRenderFix` folder completely.
+2. Create `Mods/RoomInventoryIconRenderFix/`.
+3. Extract the contents of `RoomInventoryIconRenderFix.zip` into that folder.
 4. Enable **Room Inventory Icon Render Fix** in the in-game Mods menu.
 
-This add-on does not overwrite or modify the Claims & Uprisings workshop package.
+This is a separate add-on; it does not overwrite the Claims & Uprisings workshop mod.
 
 ## Verification
 
-The GitHub Actions workflow compiles against the game's managed assemblies and checks the installable ZIP contents. A live in-game check is still required to confirm the visual result and existing drag/drop interactions.
+The build workflow compiles against the supplied game assemblies and verifies the installable ZIP. A live in-game test is still required to verify the appearance of modules and input/output items in all room types.
